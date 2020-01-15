@@ -27,6 +27,7 @@ class LookAndSay extends LookAndSayBase {
     protected String lookAndSay(int n) {
         //NOTHING CAN BE CHANGED HERE
         return alg(n) ;
+
     }
 
     private String alg(String s) {
