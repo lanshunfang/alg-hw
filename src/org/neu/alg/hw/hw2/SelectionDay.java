@@ -16,8 +16,11 @@ import java.util.*;
 
 class SelectionDay extends SelectionDayBase {
 
+  // a cell of the representation matrix
   class Cell {
+    // the student's ID in a (all students)
     int rawIndex = 0;
+    // the student's capability (running speed) in a (all students)
     int rawOrder = 0;
 
     Cell(int i, int o) {
@@ -49,6 +52,11 @@ class SelectionDay extends SelectionDayBase {
   private int NT = N / 5;
 
   /**
+   *
+   * The alg for selection of racing students
+   *
+   * With my solution, we only require  8 iterations for 25 students to select TOP 3 on 5-track racing playground
+   *
    * Solve flow:
    * <p>
    * # STEP 1
@@ -60,33 +68,33 @@ class SelectionDay extends SelectionDayBase {
    * <p>
    * [
    * <p>
-   * a[0][*] a[1][*] a[2][*] a[3][*] a[4][*]
-   * a[5][*] a[6][*] a[7][*] a[8][*] a[9][*]
-   * a[10][*] a[11][*] a[12][*] a[13][*] a[14][*]
-   * a[15][*] a[16][*] a[17][*] a[18][*] a[19][*]
-   * a[20][*] a[21][*] a[22][*] a[23][*] a[24][*]
+   * Cell[0] Cell[1] Cell[2] Cell[3] Cell[4]
+   * Cell[5] Cell[6] Cell[7] Cell[8] Cell[9]
+   * Cell[10] Cell[11] Cell[12] Cell[13] Cell[14]
+   * Cell[15] Cell[16] Cell[17] Cell[18] Cell[19]
+   * Cell[20] Cell[21] Cell[22] Cell[23] Cell[24]
    * <p>
    * ]
    * <p>
-   * - For each a[n] (0 <= n < 5; n++), a[n] > a[n-1] (smaller number means less time, that is, faster)
-   * - And, a[0] <= a[5] <= a[10] <= a[15] <= a[20] (smaller number means less time, that is, faster)
+   * - For each Cell[n] (0 <= n < 5; n++), Cell[n].rawOrder > Cell[n-1].rawOrder (smaller number means less time, that is, faster)
+   * - And, Cell[0].rawOrder <= Cell[5].rawOrder <= Cell[10].rawOrder <= Cell[15].rawOrder <= Cell[20].rawOrder
    * <p>
    * Reduce the matrix to 3 * 3, omitting other numbers
    * [
    * <p>
-   * a[0][*] a[1][*] a[2][*]
-   * a[10][*] a[11][*] a[12][*]
-   * a[15][*] a[16] a[17][*]
+   * Cell[0] Cell[1] Cell[2]
+   * Cell[10] Cell[11] Cell[12]
+   * Cell[15] Cell[16] Cell[17]
    * <p>
    * ]
    * When we could generate this matrix,
-   * - a[0][*] must be TOP1,
-   * - a[12][*], a[16][*], a[17][*] which are to the bottom-right of the diagonal of the square matrix
+   * - Cell[0] must be TOP1,
+   * - Cell[12], Cell[16], Cell[17] which are to the bottom-right of the diagonal of the square matrix
    * must be less equal than TOP4
    *
    * <p>
-   * So, the last race would only occurs between a[1]a[0][*], a[2]a[0][*], a[10]a[0][*], a[11]a[0][*] and a[15]a[0][*]
-   * And the last race would give us the TOP2 and TOP2
+   * So, the last race would only occurs between Cell[1], Cell[2], Cell[10],  Cell[11] and Cell[15]
+   * And the last race would give us the TOP2 and TOP3
    * <p>
    * # STEP 2, if N > 25 (not in our case, but just for a note of the alg)
    * <p>
@@ -134,11 +142,10 @@ class SelectionDay extends SelectionDayBase {
     s[1] = last5ItemsOfTheMatrixToCompare[0][0].rawIndex;
     s[2] = last5ItemsOfTheMatrixToCompare[0][1].rawIndex;
 
-
   }
 
   /**
-   * Generate matrix 5 * 5 (NT)
+   * Generate matrix 5 * 5 (NT) to represent the raw a (all student's ID and its order - running speed)
    *
    * @return
    */
@@ -165,12 +172,10 @@ class SelectionDay extends SelectionDayBase {
   }
 
   private void sortMatrixByFirstColumn(Cell[][] matrix) {
-    for (int i = 0; i < matrix.length; i++) {
-      Arrays.sort(matrix, Comparator.comparingInt(
-          (row) -> row[0].rawOrder
-      ));
-      itr++;
-    }
+    Arrays.sort(matrix, Comparator.comparingInt(
+        (row) -> row[0].rawOrder
+    ));
+    itr++;
   }
 
 
