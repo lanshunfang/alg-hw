@@ -124,9 +124,9 @@ class SelectionDay extends SelectionDayBase {
     last5ItemsOfTheMatrixToCompare[0] = new Cell[]{
         studentMatrix[0][1],
         studentMatrix[0][2],
+        studentMatrix[1][0],
+        studentMatrix[1][1],
         studentMatrix[2][0],
-        studentMatrix[2][1],
-        studentMatrix[3][0],
     };
 
     sortAllRowsOfMatrix(last5ItemsOfTheMatrixToCompare);
