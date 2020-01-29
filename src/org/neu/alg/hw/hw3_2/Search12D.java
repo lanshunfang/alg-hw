@@ -26,6 +26,7 @@ class Search12D extends Search12DBase {
 
   private boolean alg(int t) {
     //WRITE CODE
+    return true;
   }
 
 
