@@ -16,11 +16,33 @@ import org.neu.alg.hw.*;
 
 class Range extends RangeBase {
 
+  /**
+   * The min index
+   */
   private int rangeLeft;
+
+  /**
+   * The max index
+   */
   private int rangeRight;
+
+  /**
+   * flag indicating if min is found
+   */
   private boolean isRangeLeftFound;
+
+  /**
+   * flag indicating if max is found
+   */
   private boolean isRangeRightFound;
+
+  /**
+   * When we know the sub-range to search DOES NOT include max
+   */
   private boolean isOnlyFindRangeLeft;
+  /**
+   * When we know the sub-range to search DOES NOT include min
+   */
   private boolean isOnlyFindRangeRight;
 
   Range() {
@@ -146,14 +168,42 @@ class Range extends RangeBase {
     return leftBound == rightBound;
   }
 
+  /**
+   * If the given bound is a range min
+   *
+   * @param a
+   * @param bound
+   * @param n
+   * @return
+   */
   private boolean isNewLeftBoundaryDetected(int[] a, int bound, int n) {
     return !this.isRangeLeftFound && a[bound] == n && (bound == 0 || bound > 0 && a[bound - 1] < n);
   }
 
+  /**
+   * If the given bound is a range max
+   *
+   * @param a
+   * @param bound
+   * @param n
+   * @return
+   */
   private boolean isNewRightBoundaryDetected(int[] a, int bound, int n) {
     return !this.isRangeRightFound && a[bound] == n && (bound == a.length - 1 || bound < a.length - 1 && a[bound + 1] > n);
   }
 
+  /**
+   * Detect boundary and update found result if any
+   * <p>
+   * The boundary detection is not just to detect if the given left bound or right bound meet the range min/max,
+   * but also store it
+   *
+   * @param a
+   * @param leftBound
+   * @param rightBound
+   * @param n
+   * @return
+   */
   private boolean isBoundaryDetectedAndSet(int[] a, int leftBound, int rightBound, int n) {
 
     boolean isDetected = false;
@@ -182,11 +232,40 @@ class Range extends RangeBase {
 
   }
 
+  /**
+   * Indicate if we should continue to search range min
+   * @return
+   */
+  private boolean isShouldSearchRangeLeft() {
+    return !this.isRangeLeftFound && !this.isOnlyFindRangeRight;
+  }
+
+  /**
+   * Indicate if we should continue to search range max
+   * @return
+   */
+  private boolean isShouldSearchRangeRight() {
+    return !this.isRangeRightFound && !this.isOnlyFindRangeLeft;
+  }
+
+  /**
+   * Reset class private values
+   */
   private void init() {
     this.rangeLeft = this.rangeRight = -1;
     this.isRangeRightFound = this.isRangeLeftFound = false;
   }
 
+  /**
+   * Binary search the boundary
+   * <p>
+   * For each iteration, we detect both leftBound and rightBound are in the range bound
+   *
+   * @param a
+   * @param leftBound
+   * @param rightBound
+   * @param n
+   */
   private void findBound(int[] a, int leftBound, int rightBound, int n) {
 
     if (this.isRangeDetermined()) {
@@ -219,12 +298,12 @@ class Range extends RangeBase {
     int newMidPos = leftBound + (rightBound - leftBound) / 2;
 
     if (a[newMidPos] == n) {
-      if (leftBound != newMidPos && !this.isRangeLeftFound && !this.isOnlyFindRangeRight) {
+      if (leftBound != newMidPos && this.isShouldSearchRangeLeft()) {
         this.isOnlyFindRangeLeft = true;
         findBound(a, leftBound, newMidPos, n);
       }
 
-      if (rightBound != newMidPos && !this.isRangeRightFound && !this.isOnlyFindRangeLeft) {
+      if (rightBound != newMidPos && this.isShouldSearchRangeRight()) {
         this.isOnlyFindRangeRight = true;
         findBound(a, newMidPos, rightBound, n);
       }
