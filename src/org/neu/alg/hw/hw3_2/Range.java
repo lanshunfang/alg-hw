@@ -15,6 +15,14 @@ import org.neu.alg.hw.*;
  */
 
 class Range extends RangeBase {
+
+  private int rangeLeft;
+  private int rangeRight;
+  private boolean isRangeLeftFound;
+  private boolean isRangeRightFound;
+  private boolean isOnlyFindRangeLeft;
+  private boolean isOnlyFindRangeRight;
+
   Range() {
     //NOTHING CAN BE CHANGED HERE
     testBed();
@@ -36,9 +44,12 @@ class Range extends RangeBase {
    */
   private int[] alg(int[] a, int n) {
 
+    init();
+    findBound(a, 0, a.length - 1, n);
+
     return new int[]{
-        findBound(a, 0, a.length - 1, n, false),
-        findBound(a, 0, a.length - 1, n, true),
+        this.rangeLeft,
+        this.rangeRight,
     };
 
     //WRITE CODE
@@ -74,100 +85,161 @@ class Range extends RangeBase {
 //    return new int[]{leftPos, rightPos};
   }
 
-  private int findBound(int[] a, int leftBound, int rightBound, int n, boolean isFindMax) {
+  private void storeFound(boolean isLeft, int value) {
+    if (isLeft) {
+      this.rangeLeft = value;
+      this.isRangeLeftFound = true;
+    } else {
+      this.rangeRight = value;
+      this.isRangeRightFound = true;
+
+    }
+  }
+
+  private void setRangeLeft(int foundPos) {
+    if (this.isRangeLeftFound) {
+      return;
+    }
+    this.storeFound(true, foundPos);
+  }
+
+  private void setRangeRight(int foundPos) {
+    if (this.isRangeRightFound) {
+      return;
+    }
+    this.storeFound(false, foundPos);
+  }
+
+  private void setGivenValueIsNotInRange() {
+    this.storeFound(true, -1);
+    this.storeFound(false, -1);
+  }
+
+  /**
+   * Check if the given value is not in range
+   *
+   * @param a
+   * @param n
+   * @return
+   * @example n == 4
+   * {1, 2, 2, 3}
+   */
+  private boolean isGivenValueOutOfRange(int[] a, int n) {
+    return a[0] > n || a[a.length - 1] < n;
+  }
+
+  /**
+   * If range is found
+   *
+   * @return
+   */
+  private boolean isRangeDetermined() {
+    return this.isRangeLeftFound && this.isRangeRightFound;
+  }
+
+  /**
+   * leftBound == rightBound
+   *
+   * @return
+   */
+  private boolean isBoundaryCollapsed(int leftBound, int rightBound) {
+    return leftBound == rightBound;
+  }
+
+  private boolean isNewLeftBoundaryDetected(int[] a, int bound, int n) {
+    return !this.isRangeLeftFound && a[bound] == n && (bound == 0 || bound > 0 && a[bound - 1] < n);
+  }
+
+  private boolean isNewRightBoundaryDetected(int[] a, int bound, int n) {
+    return !this.isRangeRightFound && a[bound] == n && (bound == a.length - 1 || bound < a.length - 1 && a[bound + 1] > n);
+  }
+
+  private boolean isBoundaryDetectedAndSet(int[] a, int leftBound, int rightBound, int n) {
+
+    boolean isDetected = false;
+    if (this.isNewLeftBoundaryDetected(a, leftBound, n)) {
+      this.setRangeLeft(leftBound);
+      isDetected = true;
+    }
+
+    if (this.isNewLeftBoundaryDetected(a, rightBound, n)) {
+      this.setRangeLeft(rightBound);
+      isDetected = true;
+
+    }
+
+    if (this.isNewRightBoundaryDetected(a, leftBound, n)) {
+      this.setRangeRight(leftBound);
+      isDetected = true;
+    }
+
+    if (this.isNewRightBoundaryDetected(a, rightBound, n)) {
+      this.setRangeRight(rightBound);
+      isDetected = true;
+    }
+
+    return isDetected;
+
+  }
+
+  private void init() {
+    this.rangeLeft = this.rangeRight = -1;
+    this.isRangeRightFound = this.isRangeLeftFound = false;
+  }
+
+  private void findBound(int[] a, int leftBound, int rightBound, int n) {
+
+    if (this.isRangeDetermined()) {
+      // found
+      return;
+    }
 
     numSteps++;
 
-    if (a[0] > n || a[a.length - 1] < n) {
+    if (this.isGivenValueOutOfRange(a, n)) {
       // the number is not in the range of the array
-      return -1;
+      this.setGivenValueIsNotInRange();
+      return;
     }
 
-    if (isFindMax) {
-      if (a[leftBound] == n && (leftBound == 0 || a[leftBound + 1] > n)) {
-        return leftBound;
-      }
-      if (a[rightBound] == n && (rightBound == 0 || a[rightBound + 1] > n)) {
-        return rightBound;
-      }
-    } else {
-      if (a[leftBound] == n && (leftBound == 0 || a[leftBound - 1] < n)) {
-        return leftBound;
-      }
-      if (a[rightBound] == n && (rightBound == 0 || a[rightBound - 1] < n)) {
-        return rightBound;
-      }
+
+    if (this.isBoundaryDetectedAndSet(a, leftBound, rightBound, n)) {
+      return;
     }
 
-    if (isFindMax) {
-      if (a[rightBound] <= n) {
-        leftBound = rightBound;
-        rightBound = rightBound + (a.length - rightBound) / 2;
-        return findBound(a, leftBound, rightBound, n, isFindMax);
-      } else {
+    if (this.isRangeDetermined()) {
+      // found
+      return;
+    }
 
-        int newMidPos = leftBound + (rightBound - leftBound) / 2;
+    if (this.isBoundaryCollapsed(leftBound, rightBound)) {
+      return;
+    }
 
-        if (a[newMidPos] <= n) {
-          return findBound(a, newMidPos, rightBound, n, isFindMax);
-        } else {
-          return findBound(a, leftBound, newMidPos, n, isFindMax);
-        }
+    int newMidPos = leftBound + (rightBound - leftBound) / 2;
 
+    if (a[newMidPos] == n) {
+      if (leftBound != newMidPos && !this.isRangeLeftFound && !this.isOnlyFindRangeRight) {
+        this.isOnlyFindRangeLeft = true;
+        findBound(a, leftBound, newMidPos, n);
+      }
+
+      if (rightBound != newMidPos && !this.isRangeRightFound && !this.isOnlyFindRangeLeft) {
+        this.isOnlyFindRangeRight = true;
+        findBound(a, newMidPos, rightBound, n);
+      }
+
+    } else if (a[newMidPos] < n) {
+      if (rightBound != newMidPos) {
+        findBound(a, newMidPos, rightBound, n);
       }
     } else {
-      if (a[leftBound] > n) {
-        rightBound = leftBound;
-        leftBound = leftBound / 2;
-        return findBound(a, leftBound, rightBound, n, isFindMax);
-      } else if (a[leftBound] == n) {
-        rightBound = leftBound;
-        leftBound = rightBound / 2;
-        return findBound(a, leftBound, rightBound, n, isFindMax);
-
-      } else {
-
-        int newMidPos = leftBound + (rightBound - leftBound) / 2;
-
-        if (a[newMidPos] >= n) {
-          if (newMidPos == leftBound) {
-            return -1;
-          }
-          return findBound(a, leftBound, newMidPos, n, isFindMax);
-        } else {
-          if (newMidPos == rightBound) {
-            return -1;
-          }
-          return findBound(a, newMidPos, rightBound, n, isFindMax);
-        }
-
+      if (leftBound != newMidPos) {
+        findBound(a, leftBound, newMidPos, n);
       }
     }
 
   }
-
-  private int findMax(int[] a, int leftBound, int rightBound, int n) {
-    if (a[rightBound] == n && (rightBound == 0 || a[rightBound + 1] > n)) {
-      return rightBound;
-    }
-    numSteps++;
-    if (a[rightBound] < n) {
-      leftBound = rightBound;
-      rightBound = rightBound + (a.length - rightBound) / 2;
-      return findMax(a, leftBound, rightBound, n);
-    } else {
-
-      int newMidPos = leftBound + (rightBound - leftBound) / 2;
-
-      if (a[newMidPos] <= n) {
-        return findMax(a, newMidPos, rightBound, n);
-      } else {
-        return findMax(a, leftBound, newMidPos, n);
-      }
-
-    }
-  }
-
 
   public static void main(String[] args) {
     //NOTHING CAN BE CHANGED HERE
