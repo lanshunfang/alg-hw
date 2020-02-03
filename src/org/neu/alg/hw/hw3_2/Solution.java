@@ -1,30 +1,41 @@
 package org.neu.alg.hw.hw3_2;
 
-/**
- * File Name: Search12D.java
- * Search12D concrete class
- * <p>
- * <p>
- * To Compile: IntUtil.java RandomInt.java Search12D.java Search12DBase.java
- *
- * @author Jagadeesh Vasudevamurthy
- * @year 2019
- */
+class Solution {
 
-class Search12D extends Search12DBase {
-  Search12D() {
-    //NOTHING CAN BE CHANGED HERE
-    testBench();
+  private int[][] matrix;
+  private int c() {
+    if (this.matrix.length > 0) {
+      return this.matrix[0].length;
+    } else {
+      return 0;
+    }
+
   }
 
-  @Override
-  protected boolean search12D(int t) {
-    //NOTHING CAN BE CHANGED HERE
-    return alg(t);
+  private int r() {
+    return this.matrix.length;
   }
+
+  public boolean searchMatrix(int[][] matrix, int target) {
+    this.matrix = matrix;
+    return alg(target);
+  }
+
+  private int get(int r, int c) {
+    return matrix[r][c];
+  }
+
+  private boolean isMatrixEmpty() {
+    return r() == 0 || c() == 0;
+  }
+
 
   private boolean alg(int t) {
     //WRITE CODE
+
+    if (this.isMatrixEmpty()) {
+      return false;
+    }
 
     int[] matrixDescriptor = getMatrixDescriptor();
 
@@ -33,6 +44,8 @@ class Search12D extends Search12DBase {
         0
     };
 
+    int[] minLeftPos = new int[2];
+    int[] maxRightPos = new int[2];
 
     int[] rightBoundPos = new int[]{
         matrixDescriptor[0] - 1,
@@ -49,8 +62,9 @@ class Search12D extends Search12DBase {
       );
 
       int midValue = getValueAtPos(midPos);
+      int rightValue = getValueAtPos(rightBoundPos);
 
-      if (midValue == t) {
+      if (midValue == t || rightValue == t) {
         isFound = true;
         break;
       } else if (
@@ -64,9 +78,16 @@ class Search12D extends Search12DBase {
 
         leftBoundPos = midPos;
 
+        if (minLeftPos[0] <= leftBoundPos[0] && minLeftPos[1] <= leftBoundPos[1]) {
+          minLeftPos = leftBoundPos;
+        }
+
       } else {
         rightBoundPos = midPos;
 
+        if (maxRightPos[0] >= rightBoundPos[0] && maxRightPos[1] >= rightBoundPos[1]) {
+          minLeftPos = rightBoundPos;
+        }
       }
 
     }
@@ -75,7 +96,7 @@ class Search12D extends Search12DBase {
   }
 
   private boolean isRangeCollapsed(int[] leftBound, int[] rightBound) {
-    return leftBound[0] == rightBound[0] && leftBound[1] == rightBound[1];
+    return leftBound[0] == rightBound[0] && rightBound[1] == leftBound[1];
   }
 
   private int getValueAtPos(int[] pos) {
@@ -112,12 +133,4 @@ class Search12D extends Search12DBase {
     };
   }
 
-
-  public static void main(String[] args) {
-    //NOTHING CAN BE CHANGED HERE
-    System.out.println("Search12D problem STARTS");
-    Search12D m = new Search12D() ;
-    System.out.println("All Search12D tests passed. You are genius");
-    System.out.println("Search12D problem ENDS");
-  }
 }
