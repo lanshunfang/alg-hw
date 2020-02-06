@@ -54,18 +54,22 @@ class TruthTable {
   }
 
   private void printTruthTable() {
-    if (n < 28) {
-      printTruthTableTimeOptimized();
-    } else {
-      printTruthTableSpaceOptimized();
+    printTruthTableTimeOptimized(n, 27);
+    if (n > 27) {
+      printTruthTableSpaceOptimized(n, 28);
     }
   }
 
-  private void printTruthTableSpaceOptimized() {
+  /**
+   * @param n
+   * @param lowN - the start point to print the table, used with combination to #printTruthTableTimeOptimized;
+   */
+  private void printTruthTableSpaceOptimized(int n, int lowN) {
 
     int len = (int) Math.pow(2, n);
+    int lowLen = (int) Math.pow(2, lowN);
 
-    for (int i = 0; i < len; i++) {
+    for (int i = lowLen; i < len; i++) {
       display(getBinaryDescriptorFromDecimal(i), n);
     }
 
@@ -111,8 +115,16 @@ class TruthTable {
   }
 
 
-  private void printTruthTableTimeOptimized() {
-//    TBDException tbdException = new TBDException("printTruthTable");
+  /**
+   * Max n
+   *
+   * @param maxN, the max n could be proceed by default JAVA heap size
+   */
+  private void printTruthTableTimeOptimized(int n, int maxN) {
+
+    if (n > maxN) {
+      return;
+    }
 
 //    int n = 5;
     int[][] cachedResult = new int[n][];
@@ -172,7 +184,7 @@ class TruthTable {
   }
 
   private void displayTableLength() {
-    System.out.println("[INFO] The Truth Table Length is " + (int)Math.pow(2, n));
+    System.out.println("[INFO] The Truth Table Length is " + (int) Math.pow(2, n));
 
   }
 
