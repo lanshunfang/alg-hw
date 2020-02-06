@@ -31,7 +31,7 @@ class TruthTable {
    * ----------  YOU CANNOT CHANGE ANYTHING BELOW--------------------------
    */
   private static void testBench() {
-    for (int i = 1; i < 2; ++i) {
+    for (int i = 1; i < 31; ++i) {
       boolean display = (i > 10) ? false : true;
       System.out.println("------------Truth table of " + i + " inputs function --------------");
       long startTime = System.nanoTime();
@@ -59,9 +59,8 @@ class TruthTable {
   private void printTruthTable() {
 //    TBDException tbdException = new TBDException("printTruthTable");
 
-//    int n = this.n;
-    int n = 5;
-    int[][] cachedResult = new int[10][];
+//    int n = 5;
+    int[][] cachedResult = new int[n][];
 
     int significantMultiplier = 1;
 
@@ -69,8 +68,12 @@ class TruthTable {
     cachedResult[0][0] = 0;
     cachedResult[0][1] = 1;
 
-    int newLength = 1;
+    if (n == 1) {
+      display(cachedResult[0], n);
+      return;
+    }
 
+    int newLength = 1;
 
     for (int i = 1; i < n; i++) {
       significantMultiplier = significantMultiplier * 10;
@@ -80,16 +83,21 @@ class TruthTable {
       int arrIndex = newLength - 1;
 
       cachedResult[i] = new int[newLength];
+      int[] accumulated = new int[newLength];
 
-      for (int j1 = i - 1; j1 >= 0; j1--) {
+      for (int j = i - 1; j >= 0; j--) {
 
-        int[] currentCachedItem = cachedResult[j1];
+        int[] currentCachedItem = cachedResult[j];
 
         for (int k = currentCachedItem.length - 1; k >= 0; k--) {
-          if (arrIndex >= 0) {
-            cachedResult[i][arrIndex] = currentCachedItem[k] + significantMultiplier;
-            arrIndex--;
-          }
+          final int lookBackNum = currentCachedItem[k];
+          accumulated[arrIndex] = lookBackNum;
+
+          final int newNum = lookBackNum + significantMultiplier;
+
+          cachedResult[i][arrIndex] = newNum;
+
+          arrIndex--;
 
         }
 
@@ -98,14 +106,33 @@ class TruthTable {
 
       }
 
-
-      System.out.println(Arrays.toString(cachedResult[i]));
+//      display(accumulated, n);
+      display(cachedResult[i], n);
 
 
     }
 
-    System.out.println(Arrays.toString(cachedResult[cachedResult.length - 1]));
 
+  }
+
+  private void display(int[] nums, int expectedLength) {
+
+    if (!this.display) {
+      return;
+    }
+
+    for (int num : nums) {
+
+      StringBuilder stringBuilder = new StringBuilder();
+      String numToStr = "" + num;
+      int lenNumStr = numToStr.length();
+      for (int i = expectedLength; i > lenNumStr; i--) {
+        stringBuilder.append('0');
+      }
+
+      stringBuilder.append(numToStr);
+      System.out.println(stringBuilder);
+    }
 
   }
 
