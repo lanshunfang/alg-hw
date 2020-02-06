@@ -94,31 +94,13 @@ class TruthTable {
     return reverseBinaryDescriptor.toString();
   }
 
-  private void display(String stringifyNum, int expectedLength) {
-
-    if (!this.display) {
-      return;
-    }
-
-
-    StringBuilder stringBuilder = new StringBuilder();
-
-    int lenNumStr = stringifyNum.length();
-    for (int i = expectedLength; i > lenNumStr; i--) {
-      stringBuilder.append('0');
-    }
-
-    stringBuilder.append(stringifyNum);
-    System.out.println(stringBuilder);
-
-
-  }
-
 
   /**
-   * Max n
+   * The time optimized solution
+   * - reduces converting a decimal to binary converting time
+   * - as well as appeal to dynamic programming to reduce unnecessary computation
    *
-   * @param maxN, the max n could be proceed by default JAVA heap size
+   * @param maxN, the max n could be proceeded by default JAVA heap size
    */
   private void printTruthTableTimeOptimized(int n, int maxN) {
 
@@ -131,6 +113,7 @@ class TruthTable {
 
     int significantMultiplier = 1;
 
+    // init
     cachedResult[0] = new int[2];
     cachedResult[0][0] = 0;
     cachedResult[0][1] = 1;
@@ -145,6 +128,20 @@ class TruthTable {
     int newLength = 1;
 
     for (int i = 1; i < n; i++) {
+      // the idea here, is to follow the ste:
+      //  2^2 has the following number
+      // {00, 01, 10, 11}
+      // - If we observe the first half {00, 01}, we could see that it's equal to the outcome of 2^1 with a prefix 0;
+      // - If we observe the second half {10, 11}, we could see that it's equal to its counter part in 2^1 pls 10,
+      //   10 is the significantMultiplier here
+
+      // The same idea applied to 2^3
+      // {000, 001, 010, 011, 100, 101, 110, 111}
+      // - which has its first half equal to 2^2;
+      //   and its second half is the same value plus 100, the significantMultiplier
+      // with this approach, we could easily remember and print out all numbers
+
+      // Note that, the maximum `n` in `2^n` is `27` as that's the RAM size cap a JVM allocated to its heap by default.
       significantMultiplier = significantMultiplier * 10;
 
       newLength = newLength * 2;
@@ -170,12 +167,9 @@ class TruthTable {
 
         }
 
-//      cachedResult[i][0] = significantMultiplier;
-
 
       }
 
-//      display(accumulated, n);
       display(cachedResult[i], n);
     }
 
@@ -188,6 +182,27 @@ class TruthTable {
 
   }
 
+
+  private void display(String stringifyNum, int expectedLength) {
+
+    if (!this.display) {
+      return;
+    }
+
+    StringBuilder stringBuilder = new StringBuilder();
+
+    int lenNumStr = stringifyNum.length();
+
+    for (int i = expectedLength; i > lenNumStr; i--) {
+      stringBuilder.append('0');
+    }
+
+    stringBuilder.append(stringifyNum);
+    System.out.println(stringBuilder);
+
+
+  }
+
   private void display(int[] nums, int expectedLength) {
 
     if (!this.display) {
@@ -196,15 +211,9 @@ class TruthTable {
 
     for (int num : nums) {
 
-      StringBuilder stringBuilder = new StringBuilder();
       String numToStr = "" + num;
-      int lenNumStr = numToStr.length();
-      for (int i = expectedLength; i > lenNumStr; i--) {
-        stringBuilder.append('0');
-      }
+      display(numToStr, expectedLength);
 
-      stringBuilder.append(numToStr);
-      System.out.println(stringBuilder);
     }
 
   }
