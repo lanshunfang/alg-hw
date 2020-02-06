@@ -2,9 +2,6 @@ package org.neu.alg.hw.hw4;
 
 import org.neu.alg.hw.*;
 
-import java.util.Arrays;
-
-
 /**
  * File Name: TruthTable.java
  * Print 'n' input truth table
@@ -57,6 +54,64 @@ class TruthTable {
   }
 
   private void printTruthTable() {
+    if (n < 28) {
+      printTruthTableTimeOptimized();
+    } else {
+      printTruthTableSpaceOptimized();
+    }
+  }
+
+  private void printTruthTableSpaceOptimized() {
+
+    int len = (int) Math.pow(2, n);
+
+    for (int i = 0; i < len; i++) {
+      display(getBinaryDescriptorFromDecimal(i), n);
+    }
+
+    displayTableLength();
+
+  }
+
+  public String getBinaryDescriptorFromDecimal(int decimalNum) {
+    int[] binDescriptor = new int[30];
+    int index = 0;
+    while (decimalNum > 0) {
+      binDescriptor[index++] = decimalNum % 2;
+      decimalNum = decimalNum / 2;
+    }
+
+    StringBuilder reverseBinaryDescriptor = new StringBuilder();
+
+    for (int i = index - 1; i >= 0; i--) {
+      reverseBinaryDescriptor.append("" + binDescriptor[i]);
+    }
+
+    return reverseBinaryDescriptor.toString();
+  }
+
+  private void display(String stringifyNum, int expectedLength) {
+
+    if (!this.display) {
+      return;
+    }
+
+
+    StringBuilder stringBuilder = new StringBuilder();
+
+    int lenNumStr = stringifyNum.length();
+    for (int i = expectedLength; i > lenNumStr; i--) {
+      stringBuilder.append('0');
+    }
+
+    stringBuilder.append(stringifyNum);
+    System.out.println(stringBuilder);
+
+
+  }
+
+
+  private void printTruthTableTimeOptimized() {
 //    TBDException tbdException = new TBDException("printTruthTable");
 
 //    int n = 5;
@@ -68,8 +123,10 @@ class TruthTable {
     cachedResult[0][0] = 0;
     cachedResult[0][1] = 1;
 
+    display(cachedResult[0], n);
+
     if (n == 1) {
-      display(cachedResult[0], n);
+      displayTableLength();
       return;
     }
 
@@ -108,10 +165,14 @@ class TruthTable {
 
 //      display(accumulated, n);
       display(cachedResult[i], n);
-
-
     }
 
+    displayTableLength();
+
+  }
+
+  private void displayTableLength() {
+    System.out.println("[INFO] The Truth Table Length is " + (int)Math.pow(2, n));
 
   }
 
