@@ -3,7 +3,7 @@ package org.neu.alg.hw.hw4;
 import org.neu.alg.hw.*;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * File Name: duplicateN.java
@@ -30,33 +30,67 @@ class duplicateN extends duplicateNBase {
      * assert(maxElementValue(arr)).isLessEqualThan(arr.length - 1)
      */
 
-    List<int[]> targetListToCheckDuplication = Arrays.asList(this.a);
 
-    return (int) targetListToCheckDuplication
-        .stream()
+    return (int) this.getStream()
         .filter(
-            (ele) -> {
-              return targetListToCheckDuplication
-                  .stream()
-                  .anyMatch(
-                      (eleInner) -> {
-                        return eleInner == ele;
-                      }
-                  );
-            }
+            ele -> this.getStream()
+                .anyMatch(
+                    eleInner -> eleInner == ele
+                )
         )
         .count();
 
   }
 
   private int alg_ntime_n_space() {
-    TBDException tbdException = new TBDException("alg_ntime_n_space");
-    return 1;
+    int[] descriptorArr = new int[a.length];
+
+    for (int i = 0; i < a.length; i++) {
+      descriptorArr[a[i]]++;
+    }
+
+    return Arrays.stream(descriptorArr)
+        .filter(
+            ele -> ele != 0
+        )
+        .sum();
   }
 
   private int alg_ntime_constant_space() {
-    TBDException tbdException = new TBDException("alg_ntime_constant_space");
-    return 1;
+    int arrayLen = a.length;
+
+    int count = 0;
+
+    // {1, 3, 3, 2}
+    for (int i = 0; i < arrayLen; i++) {
+      int eleAsIndex = a[i];
+      if (eleAsIndex < 0) {
+        eleAsIndex += arrayLen;
+      }
+
+      if (a[eleAsIndex] < 0) {
+        count++;
+        a[eleAsIndex] += arrayLen;
+      }
+
+      a[eleAsIndex] -= arrayLen;
+
+    }
+
+    for (int i = 0; i < arrayLen; i++) {
+      int ele = a[i];
+      if (ele < 0) {
+        count++;
+        a[i] += arrayLen;
+      }
+    }
+
+    return count;
+
+  }
+
+  private IntStream getStream() {
+    return Arrays.stream(this.a);
   }
 
   @Override
