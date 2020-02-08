@@ -30,30 +30,47 @@ class duplicateN extends duplicateNBase {
      * assert(maxElementValue(arr)).isLessEqualThan(arr.length - 1)
      */
 
+    int count = 0;
 
-    return (int) this.getStream()
-        .filter(
-            ele -> this.getStream()
-                .anyMatch(
-                    eleInner -> eleInner == ele
-                )
-        )
-        .count();
+    for (int i = 0; i < a.length; i++) {
+      final int ele = a[i];
+      boolean isFound = false;
+      for (int j = 0; j < a.length; j++) {
+        final int eleInner = a[j];
+
+        if (ele == eleInner && i != j) {
+          isFound = true;
+        }
+
+      }
+
+      if (isFound) {
+        count++;
+      }
+
+    }
+
+    return count;
 
   }
 
   private int alg_ntime_n_space() {
     int[] descriptorArr = new int[a.length];
 
+    int count = 0;
+
     for (int i = 0; i < a.length; i++) {
       descriptorArr[a[i]]++;
     }
 
-    return Arrays.stream(descriptorArr)
-        .filter(
-            ele -> ele != 0
-        )
-        .sum();
+    for (int i = 0; i < descriptorArr.length; i++) {
+      int ele = descriptorArr[i];
+      if (ele > 1) {
+        count += ele;
+      }
+    }
+
+    return count;
   }
 
   private int alg_ntime_constant_space() {
@@ -65,12 +82,7 @@ class duplicateN extends duplicateNBase {
     for (int i = 0; i < arrayLen; i++) {
       int eleAsIndex = a[i];
       if (eleAsIndex < 0) {
-        eleAsIndex += arrayLen;
-      }
-
-      if (a[eleAsIndex] < 0) {
-        count++;
-        a[eleAsIndex] += arrayLen;
+        eleAsIndex = getRawValue(eleAsIndex, arrayLen);
       }
 
       a[eleAsIndex] -= arrayLen;
@@ -79,8 +91,13 @@ class duplicateN extends duplicateNBase {
 
     for (int i = 0; i < arrayLen; i++) {
       int ele = a[i];
-      if (ele < 0) {
-        count++;
+      if (ele < -arrayLen) {
+        int currentElementCountFound = (ele + 1) / -arrayLen;
+        count += currentElementCountFound + 1;
+        a[i] += currentElementCountFound * arrayLen;
+      }
+
+      if (a[i] < 0) {
         a[i] += arrayLen;
       }
     }
@@ -89,8 +106,11 @@ class duplicateN extends duplicateNBase {
 
   }
 
-  private IntStream getStream() {
-    return Arrays.stream(this.a);
+  private int getRawValue(int currentValue, int arrLength) {
+    while (currentValue < 0) {
+      currentValue += arrLength;
+    };
+    return currentValue % arrLength;
   }
 
   @Override
