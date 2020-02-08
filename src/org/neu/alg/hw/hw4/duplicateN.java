@@ -87,6 +87,11 @@ class duplicateN extends duplicateNBase {
 
       a[eleAsIndex] -= arrayLen;
 
+      if (a[eleAsIndex] < -2 * arrayLen) {
+        count++;
+        a[eleAsIndex] += arrayLen;
+      }
+
     }
 
     for (int i = 0; i < arrayLen; i++) {
