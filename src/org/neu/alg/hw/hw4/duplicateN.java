@@ -32,22 +32,43 @@ class duplicateN extends duplicateNBase {
 
     int count = 0;
 
-    for (int i = 0; i < a.length; i++) {
+    int arrLen = a.length;
+
+    for (int i = 0; i < arrLen; i++) {
       final int ele = a[i];
+      boolean isAlreadyCounted = false;
       boolean isFound = false;
-      for (int j = 0; j < a.length; j++) {
+
+      for (int j = 0; j < arrLen; j++) {
+
+        if (j == i) {
+          continue;
+        }
+
         final int eleInner = a[j];
 
-        if (ele == eleInner && i != j) {
+        if (eleInner == ele) {
           isFound = true;
+        }
+
+        if (eleInner == ele + arrLen || ele == eleInner + arrLen) {
+          isAlreadyCounted = true;
         }
 
       }
 
-      if (isFound) {
-        count++;
+      if (!isAlreadyCounted && isFound) {
+        a[i] += arrLen;
       }
 
+    }
+
+    for (int i = 0; i < arrLen; i++) {
+      if (a[i] >= arrLen) {
+        a[i] -= arrLen;
+        count++;
+
+      }
     }
 
     return count;
@@ -55,18 +76,24 @@ class duplicateN extends duplicateNBase {
   }
 
   private int alg_ntime_n_space() {
-    int[] descriptorArr = new int[a.length];
 
     int count = 0;
+    int arrLen = a.length;
 
-    for (int i = 0; i < a.length; i++) {
-      descriptorArr[a[i]]++;
+    int[] descriptorArr = new int[arrLen];
+
+    for (int i = 0; i < arrLen; i++) {
+      if (descriptorArr[a[i]] < 2) {
+        descriptorArr[a[i]]++;
+      }
     }
 
-    for (int i = 0; i < descriptorArr.length; i++) {
+    for (int i = 0; i < arrLen; i++) {
       int ele = descriptorArr[i];
+//      if (ele > 1) {
       if (ele > 1) {
-        count += ele;
+//        count += ele;
+        count++;
       }
     }
 
@@ -75,8 +102,9 @@ class duplicateN extends duplicateNBase {
 
   private int alg_ntime_constant_space() {
 
-    System.out.println("-----------------");
-    System.out.print("\tduplicate {");
+
+    printStart();
+
     int arrayLen = a.length;
 
     int count = 0;
@@ -88,11 +116,12 @@ class duplicateN extends duplicateNBase {
         eleAsIndex = getRawValue(eleAsIndex, arrayLen);
       }
 
-      a[eleAsIndex] -= arrayLen;
+//      a[eleAsIndex] -= arrayLen;
 
-      if (a[eleAsIndex] < -2 * arrayLen) {
-        count++;
-        a[eleAsIndex] += arrayLen;
+//      if (a[eleAsIndex] < -2 * arrayLen) {
+      if (a[eleAsIndex] > -2 * arrayLen) {
+//        count++;
+        a[eleAsIndex] -= arrayLen;
       }
 
     }
@@ -101,9 +130,10 @@ class duplicateN extends duplicateNBase {
       int ele = a[i];
       boolean isDuplicate = false;
       if (ele < -arrayLen) {
-        int currentElementCountFound = (ele + 1) / -arrayLen;
-        count += currentElementCountFound + 1;
-        a[i] += currentElementCountFound * arrayLen;
+//        int currentElementCountFound = (ele + 1) / -arrayLen;
+//        count += currentElementCountFound + 1;
+        count += 1;
+        a[i] += 2 * arrayLen;
         isDuplicate = true;
       }
 
@@ -112,23 +142,42 @@ class duplicateN extends duplicateNBase {
       }
 
       if (isDuplicate) {
-        System.out.print("" + i + ",");
+        printDuplicateNum(i);
       }
     }
 
-    System.out.print("}");
-    System.out.println("");
-    System.out.println("-----------------");
+    printEnd();
 
     return count;
 
+  }
 
+  private void printStart() {
+    if (show) {
+      System.out.println("-----------------");
+      System.out.print("\tduplicate {");
+    }
+  }
+
+  private void printEnd() {
+    if (show) {
+      System.out.print("}");
+      System.out.println("");
+      System.out.println("-----------------");
+    }
+  }
+
+  private void printDuplicateNum(int num) {
+    if (show) {
+      System.out.print("" + num + ",");
+    }
   }
 
   private int getRawValue(int currentValue, int arrLength) {
     while (currentValue < 0) {
       currentValue += arrLength;
-    };
+    }
+    ;
     return currentValue % arrLength;
   }
 
