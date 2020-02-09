@@ -74,6 +74,9 @@ class duplicateN extends duplicateNBase {
   }
 
   private int alg_ntime_constant_space() {
+
+    System.out.println("-----------------");
+    System.out.print("\tduplicate {");
     int arrayLen = a.length;
 
     int count = 0;
@@ -96,18 +99,29 @@ class duplicateN extends duplicateNBase {
 
     for (int i = 0; i < arrayLen; i++) {
       int ele = a[i];
+      boolean isDuplicate = false;
       if (ele < -arrayLen) {
         int currentElementCountFound = (ele + 1) / -arrayLen;
         count += currentElementCountFound + 1;
         a[i] += currentElementCountFound * arrayLen;
+        isDuplicate = true;
       }
 
       if (a[i] < 0) {
         a[i] += arrayLen;
       }
+
+      if (isDuplicate) {
+        System.out.print("" + i + ",");
+      }
     }
 
+    System.out.print("}");
+    System.out.println("");
+    System.out.println("-----------------");
+
     return count;
+
 
   }
 
