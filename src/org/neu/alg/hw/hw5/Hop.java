@@ -39,6 +39,18 @@ class Hop extends HopBase{
   private int alg(int [] s, int x) {
     //WRITE CODE
     //If your code is more than 10 lines, you don't understand the problem
+    final int currentValue = s[x];
+
+    if (s[x] == x) {
+      return 0;
+    } else {
+      s[x] = s[currentValue];
+    }
+    final int sum = 1 + alg(s, s[x]);
+
+    s[x] = currentValue;
+
+    return sum;
   }
 
   public static void main(String[] args) {
