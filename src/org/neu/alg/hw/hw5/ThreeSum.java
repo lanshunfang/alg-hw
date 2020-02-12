@@ -1,5 +1,7 @@
 package org.neu.alg.hw.hw5;
+
 import org.neu.alg.hw.*;
+
 import java.util.*;
 import java.io.*;
 
@@ -7,14 +9,14 @@ import java.io.*;
 /**
  * File Name: ThreeSum.java
  * ThreeSum  class
- *
+ * <p>
  * To Compile: IntUtil.java RandomInt.java Tuple.java ThreeSumBase.java ThreeSum.java
  *
  * @author Jagadeesh Vasudevamurthy
  * @year 2019
  */
 
-class ThreeSum extends ThreeSumBase{
+class ThreeSum extends ThreeSumBase {
   ThreeSum() {
     //NOTHING CAN BE CHANGED HERE
     testBench();
@@ -31,15 +33,15 @@ class ThreeSum extends ThreeSumBase{
   protected List<List<Integer>> threeSum(int[] nums, int n, int method) {
     //NOTHING CAN BE CHANGED HERE
     if (method == 1) {
-      return N3TimeConstantSpace(nums,n) ;
+      return N3TimeConstantSpace(nums, n);
     }
     if (method == 2) {
-      return N2TimeNSpace(nums,n) ;
+      return N2TimeNSpace(nums, n);
     }
     if (method == 3) {
-      return N2TimeConstantSpace(nums,n) ;
+      return N2TimeConstantSpace(nums, n);
     }
-    return null ;
+    return null;
   }
 
 
@@ -49,6 +51,23 @@ class ThreeSum extends ThreeSumBase{
    */
   private List<List<Integer>> N3TimeConstantSpace(int[] nums, int n) {
     //WRITE CODE
+    List<List<Integer>> results = new ArrayList();
+    int len = nums.length;
+    for (int i = 0; i < len; i++) {
+      for (int j = i + 1; j < len; j++) {
+        for (int k = j + 1; k < len; k++) {
+          final int eleI = nums[i];
+          final int eleJ = nums[j];
+          final int eleK = nums[k];
+          if (eleI + eleJ + eleK == n) {
+            results.add(
+                Arrays.asList(eleI, eleJ, eleK)
+            );
+          }
+        }
+      }
+    }
+    return results;
   }
 
 
@@ -58,6 +77,7 @@ class ThreeSum extends ThreeSumBase{
    */
   private List<List<Integer>> N2TimeNSpace(int[] nums, int n) {
     //WRITE CODE
+    return null;
   }
 
   /*
@@ -66,11 +86,12 @@ class ThreeSum extends ThreeSumBase{
    */
   private List<List<Integer>> N2TimeConstantSpace(int[] nums, int n) {
     //WRITE CODE
+    return null;
   }
 
   public static void main(String[] args) {
     if (false) { //Change it true, if you want to dump all output to a file
-      System.out.println("Writing to 3sumoutput.txt") ;
+      System.out.println("Writing to 3sumoutput.txt");
       try {
         System.setOut(new PrintStream(new FileOutputStream("3sumoutput.txt")));
       } catch (FileNotFoundException e) {
@@ -81,7 +102,7 @@ class ThreeSum extends ThreeSumBase{
     System.out.println("ThreeSum.java STARTS");
     String version = System.getProperty("java.version");
     System.out.println("Java version used for this program is " + version);
-    ThreeSum p = new ThreeSum() ;
+    ThreeSum p = new ThreeSum();
     System.out.println("ThreeSum.java ENDS");
   }
 }
