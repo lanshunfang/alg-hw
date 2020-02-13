@@ -51,20 +51,42 @@ class ThreeSum extends ThreeSumBase {
    */
   private List<List<Integer>> N3TimeConstantSpace(int[] nums, int n) {
     //WRITE CODE
+    // sort array to get rid of duplication found
+    // duplication: assert({-5, 0, 5}).toEqual({0, 5, -5})
+    Arrays.sort(nums);
+
     List<List<Integer>> results = new ArrayList();
+    // TODO: Should eliminate duplication
     int len = nums.length;
     for (int i = 0; i < len; i++) {
+
       for (int j = i + 1; j < len; j++) {
+        final int eleI = nums[i];
+        final int eleJ = nums[j];
+
         for (int k = j + 1; k < len; k++) {
-          final int eleI = nums[i];
-          final int eleJ = nums[j];
+
           final int eleK = nums[k];
           if (eleI + eleJ + eleK == n) {
             results.add(
                 Arrays.asList(eleI, eleJ, eleK)
             );
           }
+
+          while (nums[k - 1] == nums[k] && k < len) {
+            k++;
+          }
+
         }
+
+        while (nums[j - 1] == nums[j] && j < len) {
+          j++;
+        }
+
+      }
+
+      while (i > 0 && nums[i - 1] == nums[i] && i < len) {
+        i++;
       }
     }
     return results;
