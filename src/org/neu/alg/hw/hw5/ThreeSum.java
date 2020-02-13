@@ -58,34 +58,44 @@ class ThreeSum extends ThreeSumBase {
     List<List<Integer>> results = new ArrayList();
     // TODO: Should eliminate duplication
     int len = nums.length;
-    for (int i = 0; i < len; i++) {
+    int i = 0;
+    while (i < len) {
 
-      for (int j = i + 1; j < len; j++) {
+      int j = i + 1;
+      while (j < len) {
         final int eleI = nums[i];
         final int eleJ = nums[j];
 
-        for (int k = j + 1; k < len; k++) {
+        int k = j + 1;
+        while (k < len) {
 
           final int eleK = nums[k];
           if (eleI + eleJ + eleK == n) {
+            List<Integer> found = Arrays.asList(eleI, eleJ, eleK);
             results.add(
-                Arrays.asList(eleI, eleJ, eleK)
+                found
             );
+            System.out.println("Found 1:" + Arrays.toString(found.toArray()));
+
           }
 
-          while (nums[k - 1] == nums[k] && k < len) {
+          k++;
+          while (k < len && nums[k - 1] == nums[k]) {
             k++;
           }
 
         }
 
-        while (nums[j - 1] == nums[j] && j < len) {
+        j++;
+
+        while (j < len && nums[j - 1] == nums[j]) {
           j++;
         }
 
       }
 
-      while (i > 0 && nums[i - 1] == nums[i] && i < len) {
+      i++;
+      while (i < len && nums[i - 1] == nums[i]) {
         i++;
       }
     }
@@ -98,8 +108,73 @@ class ThreeSum extends ThreeSumBase {
    * Space complexity O(N)
    */
   private List<List<Integer>> N2TimeNSpace(int[] nums, int n) {
-    //WRITE CODE
-    return null;
+    List<List<Integer>> results = new ArrayList();
+
+    Arrays.sort(nums);
+
+    int lenArr = nums.length;
+
+    // the new array which include expected sum for a given array index
+    int[] numRemnant = new int[lenArr];
+    for (int i = 0; i < lenArr; i++) {
+      numRemnant[i] = n - nums[i];
+    }
+
+    int i = 0;
+    while (i < lenArr) {
+      // simplify the issue of 3-sum to the issue of 2-sum
+      int twoSumTarget = numRemnant[i];
+      int firstEle = nums[i];
+
+      HashMap<Integer, Integer> twoSumDescriptor = new HashMap();
+
+      for (int j = 0; j < lenArr; j++) {
+        int ele = nums[j];
+        twoSumDescriptor.put(ele, twoSumTarget - ele);
+      }
+
+
+      int j = 0;
+      while (j < lenArr) {
+        int secondEle = nums[j];
+
+        if (twoSumDescriptor.containsKey(secondEle)) {
+
+          int thirdEle = twoSumDescriptor.get(secondEle);
+          if (twoSumDescriptor.containsKey(thirdEle)) {
+            if (firstEle <= secondEle && secondEle <= thirdEle) {
+              List<Integer> found = Arrays.asList(firstEle, secondEle, thirdEle);
+              results.add(
+                  found
+              );
+              System.out.println("Found 2:" + Arrays.toString(found.toArray()));
+
+            }
+
+            twoSumDescriptor.remove(thirdEle);
+
+          }
+
+          twoSumDescriptor.remove(secondEle);
+
+        }
+
+        j++;
+
+        while (j > 0 && j < lenArr && nums[j] == nums[j - 1]) {
+          j++;
+        }
+
+      }
+
+      i++;
+      while (i > 0 && i < lenArr && nums[i] == nums[i - 1]) {
+        i++;
+      }
+
+    }
+
+    return results;
   }
 
   /*
