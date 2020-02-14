@@ -26,7 +26,8 @@ class ThreeSum extends ThreeSumBase {
   protected String inputFileBase() {
     //Where is the input file?
     //Change this to your location
-    return "C:\\work\\java11\\3sumdata\\";
+    return "/Users/lanshunfang/Documents/NEU-Classes-Courses/JAVA/alg-hw/src/org/neu/alg/hw/hw5/";
+//    return "/Users/lanshunfang/Documents/NEU-Classes-Courses/JAVA/alg-hw/src/org/neu/alg/hw/hw5/";
   }
 
   @Override
@@ -49,7 +50,7 @@ class ThreeSum extends ThreeSumBase {
    * Time complexity O(N^3)
    * Space complexity O(1)
    */
-  private List<List<Integer>> N3TimeConstantSpace(int[] nums, int n) {
+  private List<List<Integer>> N3TimeConstantSpace(int[] nums, long n) {
     //WRITE CODE
     // sort array to get rid of duplication found
     // duplication: assert({-5, 0, 5}).toEqual({0, 5, -5})
@@ -57,25 +58,25 @@ class ThreeSum extends ThreeSumBase {
 
     List<List<Integer>> results = new ArrayList();
     // TODO: Should eliminate duplication
-    int len = nums.length;
+    long len = nums.length;
     int i = 0;
     while (i < len) {
 
       int j = i + 1;
       while (j < len) {
-        final int eleI = nums[i];
-        final int eleJ = nums[j];
+        final long eleI = Long.valueOf(nums[i]);
+        final long eleJ = Long.valueOf(nums[j]);
 
         int k = j + 1;
         while (k < len) {
 
-          final int eleK = nums[k];
+          final long eleK = Long.valueOf(nums[k]);
           if (eleI + eleJ + eleK == n) {
-            List<Integer> found = Arrays.asList(eleI, eleJ, eleK);
+            List<Integer> found = Arrays.asList((int)eleI, (int)eleJ, (int)eleK);
             results.add(
                 found
             );
-            System.out.println("Found 1:" + Arrays.toString(found.toArray()));
+//            System.out.println("Found 1:" + Arrays.toString(found.toArray()));
 
           }
 
@@ -112,29 +113,29 @@ class ThreeSum extends ThreeSumBase {
 
     Arrays.sort(nums);
 
-    int lenArr = nums.length;
+    int len = nums.length;
 
     // the new array which include expected sum for a given array index
-    int[] numRemnant = new int[lenArr];
-    for (int i = 0; i < lenArr; i++) {
-      numRemnant[i] = n - nums[i];
+    long[] numRemnant = new long[len];
+    for (int i = 0; i < len; i++) {
+      numRemnant[i] = Long.valueOf(n - nums[i]);
     }
 
     int i = 0;
-    while (i < lenArr) {
+    while (i < len) {
       // simplify the issue of 3-sum to the issue of 2-sum
-      int twoSumTarget = numRemnant[i];
-      int firstEle = nums[i];
+      long twoSumTarget = Long.valueOf(numRemnant[i]);
+      long firstEle = Long.valueOf(nums[i]);
 
-      HashMap<Integer, Integer> twoSumDescriptor = new HashMap();
-      HashMap<Integer, Integer> twoSumDuplicationRecord = new HashMap();
+      HashMap<Long, Long> twoSumDescriptor = new HashMap();
+      HashMap<Long, Long> twoSumDuplicationRecord = new HashMap();
 
-      for (int j = i + 1; j < lenArr; j++) {
-        int secondEle = nums[j];
-        int thirdEleFromSubtract = twoSumTarget - secondEle;
+      for (int j = i + 1; j < len; j++) {
+        long secondEle = Long.valueOf(nums[j]);
+        long thirdEleFromSubtract = twoSumTarget - secondEle;
         if (thirdEleFromSubtract == secondEle) {
           if (!twoSumDuplicationRecord.containsKey(secondEle)) {
-            twoSumDuplicationRecord.put(secondEle, 1);
+            twoSumDuplicationRecord.put(secondEle, Long.valueOf(1));
             continue;
           }
         }
@@ -144,19 +145,23 @@ class ThreeSum extends ThreeSumBase {
 
 
       int j = i + 1;
-      while (j < lenArr) {
-        int secondEle = nums[j];
+      while (j < len) {
+        long secondEle = Long.valueOf(nums[j]);
 
         if (twoSumDescriptor.containsKey(secondEle)) {
 
-          int thirdEleFromSubtract = twoSumDescriptor.get(secondEle);
+          long thirdEleFromSubtract = twoSumDescriptor.get(secondEle);
           if (twoSumDescriptor.containsKey(thirdEleFromSubtract)) {
             if (firstEle <= secondEle && secondEle <= thirdEleFromSubtract) {
-              List<Integer> found = Arrays.asList(firstEle, secondEle, thirdEleFromSubtract);
+              List<Integer> found = Arrays.asList((int)firstEle, (int)secondEle, (int)thirdEleFromSubtract);
               results.add(
                   found
               );
-              System.out.println("Found 2:" + Arrays.toString(found.toArray()));
+//              if (len == 8000) {
+//                System.out.println("Found 2:" + Arrays.toString(found.toArray()));
+//
+//              }
+
 
             }
 
@@ -170,14 +175,14 @@ class ThreeSum extends ThreeSumBase {
 
         j++;
 
-        while (j > 0 && j < lenArr && nums[j] == nums[j - 1]) {
+        while (j > 0 && j < len && nums[j] == nums[j - 1]) {
           j++;
         }
 
       }
 
       i++;
-      while (i > 0 && i < lenArr && nums[i] == nums[i - 1]) {
+      while (i > 0 && i < len && nums[i] == nums[i - 1]) {
         i++;
       }
 
@@ -200,8 +205,8 @@ class ThreeSum extends ThreeSumBase {
 
     while (i < len) {
 
-      int currentNum = nums[i];
-      int sumTarget = n - currentNum;
+      long currentNum = Long.valueOf(nums[i]);
+      long sumTarget = Long.valueOf(n - currentNum);
 
       int leftIndex = i + 1;
 
@@ -209,12 +214,11 @@ class ThreeSum extends ThreeSumBase {
 
       while (leftIndex < rightIndex) {
 
-        int leftNum = nums[leftIndex];
-        int rightNum = nums[rightIndex];
-
+        long leftNum = Long.valueOf(nums[leftIndex]);
+        long rightNum = Long.valueOf(nums[rightIndex]);
 
         if (leftNum + rightNum == sumTarget) {
-          List<Integer> found = Arrays.asList(currentNum, leftNum, rightNum);
+          List<Integer> found = Arrays.asList((int)currentNum, (int)leftNum, (int)rightNum);
           results.add(
               found
           );
@@ -223,7 +227,10 @@ class ThreeSum extends ThreeSumBase {
           // Note that, leftIndex++ may be equal to leftIndex; It will be handled in the next step
           leftIndex++;
           rightIndex--;
-          System.out.println("Found 3:" + Arrays.toString(found.toArray()));
+//          if (len == 8000) {
+//            System.out.println("Found 3:" + Arrays.toString(found.toArray()));
+//
+//          }
 
           // increase index to bypass duplications
           boolean isShouldContinue = true;
@@ -250,26 +257,8 @@ class ThreeSum extends ThreeSumBase {
             rightIndex--;
 
           }
-          // if the sum is too small, that blames left index is too low
-          // with this step, we could save some calculations
+
         }
-
-
-
-
-        // faster pointer move
-
-//
-////        // faster pointer move
-//        if (rightIndex > leftIndex && leftNum + rightNum > sumTarget) {
-//          // if the sum is too big, that blames right index is too big
-//          rightIndex--;
-//        }
-
-
-//
-
-        //
 
       }
 
