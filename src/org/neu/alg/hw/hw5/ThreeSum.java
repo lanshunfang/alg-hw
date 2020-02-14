@@ -147,7 +147,7 @@ class ThreeSum extends ThreeSumBase {
       while (j < lenArr) {
         int secondEle = nums[j];
 
-        if (twoSumDescriptor.containsKey(secondEle) ) {
+        if (twoSumDescriptor.containsKey(secondEle)) {
 
           int thirdEleFromSubtract = twoSumDescriptor.get(secondEle);
           if (twoSumDescriptor.containsKey(thirdEleFromSubtract)) {
@@ -201,7 +201,7 @@ class ThreeSum extends ThreeSumBase {
     while (i < len) {
 
       int currentNum = nums[i];
-      int sumTarget = 0 - currentNum;
+      int sumTarget = n - currentNum;
 
       int leftIndex = i + 1;
 
@@ -224,29 +224,48 @@ class ThreeSum extends ThreeSumBase {
           leftIndex++;
           rightIndex--;
           System.out.println("Found 3:" + Arrays.toString(found.toArray()));
-        }
 
-        while (nums[leftIndex - 1] == nums[leftIndex]) {
-          leftIndex++;
-        }
+          // increase index to bypass duplications
+          boolean isShouldContinue = true;
 
-        while (nums[rightIndex - 1] == nums[rightIndex]) {
-          rightIndex--;
-        }
+          while (leftIndex < rightIndex && isShouldContinue) {
 
-        // faster pointer move
-        if (leftIndex < rightIndex && leftNum + rightNum < sumTarget) {
+            isShouldContinue = false;
+            if (nums[leftIndex] == nums[leftIndex - 1]) {
+              isShouldContinue = true;
+              leftIndex++;
+            }
+            if (nums[rightIndex] == nums[rightIndex + 1]) {
+              isShouldContinue = true;
+              rightIndex--;
+            }
+          }
+
+
+        } else if (leftIndex < rightIndex) {
+          if (leftNum + rightNum < sumTarget) {
+            leftIndex++;
+
+          } else {
+            rightIndex--;
+
+          }
           // if the sum is too small, that blames left index is too low
           // with this step, we could save some calculations
-          leftIndex++;
-          leftNum = nums[leftIndex];
         }
 
+
+
+
         // faster pointer move
-        if (rightIndex > leftIndex && leftNum + rightNum > sumTarget) {
-          // if the sum is too big, that blames right index is too big
-          rightIndex--;
-        }
+
+//
+////        // faster pointer move
+//        if (rightIndex > leftIndex && leftNum + rightNum > sumTarget) {
+//          // if the sum is too big, that blames right index is too big
+//          rightIndex--;
+//        }
+
 
 //
 
