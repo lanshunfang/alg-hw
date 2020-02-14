@@ -127,23 +127,32 @@ class ThreeSum extends ThreeSumBase {
       int firstEle = nums[i];
 
       HashMap<Integer, Integer> twoSumDescriptor = new HashMap();
+      HashMap<Integer, Integer> twoSumDuplicationRecord = new HashMap();
 
-      for (int j = 0; j < lenArr; j++) {
-        int ele = nums[j];
-        twoSumDescriptor.put(ele, twoSumTarget - ele);
+      for (int j = i + 1; j < lenArr; j++) {
+        int secondEle = nums[j];
+        int thirdEleFromSubtract = twoSumTarget - secondEle;
+        if (thirdEleFromSubtract == secondEle) {
+          if (!twoSumDuplicationRecord.containsKey(secondEle)) {
+            twoSumDuplicationRecord.put(secondEle, 1);
+            continue;
+          }
+        }
+
+        twoSumDescriptor.put(secondEle, thirdEleFromSubtract);
       }
 
 
-      int j = 0;
+      int j = i + 1;
       while (j < lenArr) {
         int secondEle = nums[j];
 
-        if (twoSumDescriptor.containsKey(secondEle)) {
+        if (twoSumDescriptor.containsKey(secondEle) ) {
 
-          int thirdEle = twoSumDescriptor.get(secondEle);
-          if (twoSumDescriptor.containsKey(thirdEle)) {
-            if (firstEle <= secondEle && secondEle <= thirdEle) {
-              List<Integer> found = Arrays.asList(firstEle, secondEle, thirdEle);
+          int thirdEleFromSubtract = twoSumDescriptor.get(secondEle);
+          if (twoSumDescriptor.containsKey(thirdEleFromSubtract)) {
+            if (firstEle <= secondEle && secondEle <= thirdEleFromSubtract) {
+              List<Integer> found = Arrays.asList(firstEle, secondEle, thirdEleFromSubtract);
               results.add(
                   found
               );
@@ -151,7 +160,7 @@ class ThreeSum extends ThreeSumBase {
 
             }
 
-            twoSumDescriptor.remove(thirdEle);
+            twoSumDescriptor.remove(thirdEleFromSubtract);
 
           }
 
