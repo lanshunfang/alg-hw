@@ -182,8 +182,79 @@ class ThreeSum extends ThreeSumBase {
    * Space complexity O(1)
    */
   private List<List<Integer>> N2TimeConstantSpace(int[] nums, int n) {
-    //WRITE CODE
-    return null;
+    List<List<Integer>> results = new ArrayList();
+
+    Arrays.sort(nums);
+
+    int len = nums.length;
+    int i = 0;
+
+    while (i < len) {
+
+      int currentNum = nums[i];
+      int sumTarget = 0 - currentNum;
+
+      int leftIndex = i + 1;
+
+      int rightIndex = len - 1;
+
+      while (leftIndex < rightIndex) {
+
+        int leftNum = nums[leftIndex];
+        int rightNum = nums[rightIndex];
+
+
+        if (leftNum + rightNum == sumTarget) {
+          List<Integer> found = Arrays.asList(currentNum, leftNum, rightNum);
+          results.add(
+              found
+          );
+
+          // when leftNum is increased, rightNum must be decreased to make the sum
+          // Note that, leftIndex++ may be equal to leftIndex; It will be handled in the next step
+          leftIndex++;
+          rightIndex--;
+          System.out.println("Found 3:" + Arrays.toString(found.toArray()));
+        }
+
+        while (nums[leftIndex - 1] == nums[leftIndex]) {
+          leftIndex++;
+        }
+
+        while (nums[rightIndex - 1] == nums[rightIndex]) {
+          rightIndex--;
+        }
+
+        // faster pointer move
+        if (leftIndex < rightIndex && leftNum + rightNum < sumTarget) {
+          // if the sum is too small, that blames left index is too low
+          // with this step, we could save some calculations
+          leftIndex++;
+          leftNum = nums[leftIndex];
+        }
+
+        // faster pointer move
+        if (rightIndex > leftIndex && leftNum + rightNum > sumTarget) {
+          // if the sum is too big, that blames right index is too big
+          rightIndex--;
+        }
+
+//
+
+        //
+
+      }
+
+      i++;
+
+      while (i < len && nums[i - 1] == nums[i]) {
+        i++;
+      }
+
+    }
+
+    return results;
+
   }
 
   public static void main(String[] args) {
