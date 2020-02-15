@@ -275,7 +275,7 @@ class ThreeSum extends ThreeSumBase {
   }
 
   public static void main(String[] args) {
-    if (false) { //Change it true, if you want to dump all output to a file
+    if (true) { //Change it true, if you want to dump all output to a file
       System.out.println("Writing to 3sumoutput.txt");
       try {
         System.setOut(new PrintStream(new FileOutputStream("3sumoutput.txt")));
