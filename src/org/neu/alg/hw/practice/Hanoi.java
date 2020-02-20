@@ -9,9 +9,9 @@ public class Hanoi {
   }
 
   Hanoi(int diskCount) {
-    this.log(String.format("[INFO] Start to tackle %d disks over 3 Hanoi rods", diskCount));
+    this.log(String.format("## [INFO] Start to tackle %d disks over 3 Hanoi rods", diskCount));
     this.solve(diskCount, Rod.Source, Rod.Mediator, Rod.Destination);
-    this.log(String.format("[INFO] ---------------END-%d----------------\n", diskCount));
+    this.log(String.format("\n[INFO] ---------------END-%d----------------\n", diskCount));
 
   }
 
@@ -54,14 +54,15 @@ public class Hanoi {
   private void solve(int currentDiskIndex, Rod fromRodName, Rod unusedRodName, Rod toRodName) {
 
     if (currentDiskIndex == 1) {
-      this.log(String.format("Move disk %d from %s to %s", currentDiskIndex, fromRodName, toRodName));
+      this.log(String.format("* Move disk %d from %s to %s", currentDiskIndex, fromRodName, toRodName));
       return;
     }
 
     // the `currentDiskIndex` problem could be solved by
+
     this.solve(currentDiskIndex - 1, fromRodName, toRodName, unusedRodName);
 
-    this.log(String.format("Move disk %d from %s to %s", currentDiskIndex, fromRodName, toRodName));
+    this.log(String.format("* Move disk %d from %s to %s", currentDiskIndex, fromRodName, toRodName));
 
     this.solve(currentDiskIndex - 1, unusedRodName, fromRodName, toRodName);
 
