@@ -1,4 +1,4 @@
-package org.neu.alg.hw.practice;
+package org.neu.alg.practice.medium;
 
 public class Hanoi {
 
@@ -20,7 +20,7 @@ public class Hanoi {
    * - Assume we have three rods, namely Source, Destination and Mediator
    * - Simplify the problem to 1 disk, the recursion handler
    * <p>
-   * - Case: 1 sick in Source
+   * - Case: 1 dick in Source
    * - move disk 1 from Source to Destination
    * <p>
    * - Case: 2 disks in Source
