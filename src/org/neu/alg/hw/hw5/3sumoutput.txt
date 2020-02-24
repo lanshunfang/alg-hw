@@ -1,0 +1,128 @@
+ThreeSum.java STARTS
+Java version used for this program is 13.0.1
+---------------------------------------------
+Array size = 14 Looking for n = 0
+---------------------------------------------
+  0   1   2   3   4   5   6   7   8   9  10  11  12  13
+ -4  -3  -3  -3  -3   1   1   1   2   2   3   3   3   6
+O(n^3)Time O(1)Space Alg  n = 14 CPU = 3.59846E-4 secs Num Tuples = 4
+O(n^2)Time O(n)Space Alg  n = 14 CPU = 3.55235E-4 secs Num Tuples = 4
+O(n^2)Time O(1)Space Alg  n = 14 CPU = 4.5516E-5 secs Num Tuples = 4
+-4 1 3 
+-4 2 2 
+-3 -3 6 
+-3 1 2 
+---------------------------------------------
+Array size = 6 Looking for n = 0
+---------------------------------------------
+  0   1   2   3   4   5
+ -1   0   1   2  -1  -4
+O(n^3)Time O(1)Space Alg  n = 6 CPU = 1.7687000000000002E-5 secs Num Tuples = 2
+O(n^2)Time O(n)Space Alg  n = 6 CPU = 5.5285000000000003E-5 secs Num Tuples = 2
+O(n^2)Time O(1)Space Alg  n = 6 CPU = 1.2333999999999999E-5 secs Num Tuples = 2
+-1 -1 2 
+-1 0 1 
+---------------------------------------------
+Array size = 7 Looking for n = 0
+---------------------------------------------
+  0   1   2   3   4   5   6
+ -2  -2   4   0  -4  -8   4
+O(n^3)Time O(1)Space Alg  n = 7 CPU = 2.8299E-5 secs Num Tuples = 3
+O(n^2)Time O(n)Space Alg  n = 7 CPU = 9.2558E-5 secs Num Tuples = 3
+O(n^2)Time O(1)Space Alg  n = 7 CPU = 2.0186E-5 secs Num Tuples = 3
+-8 4 4 
+-4 0 4 
+-2 -2 4 
+---------------------------------------------
+Array size = 7 Looking for n = 0
+---------------------------------------------
+  0   1   2   3   4   5   6
+ -1   0   1   0   1   0   1
+O(n^3)Time O(1)Space Alg  n = 7 CPU = 1.5168E-5 secs Num Tuples = 2
+O(n^2)Time O(n)Space Alg  n = 7 CPU = 4.5137E-5 secs Num Tuples = 2
+O(n^2)Time O(1)Space Alg  n = 7 CPU = 1.1217E-5 secs Num Tuples = 2
+-1 0 1 
+0 0 0 
+---------------------------------------------
+Array size = 8 Looking for n = 0
+---------------------------------------------
+  0   1   2   3   4   5   6   7
+ 30 -30 -20 -10  40   0  10  15
+O(n^3)Time O(1)Space Alg  n = 8 CPU = 5.0079E-5 secs Num Tuples = 4
+O(n^2)Time O(n)Space Alg  n = 8 CPU = 2.16052E-4 secs Num Tuples = 4
+O(n^2)Time O(1)Space Alg  n = 8 CPU = 2.7149E-5 secs Num Tuples = 4
+-30 -10 40 
+-30 0 30 
+-20 -10 30 
+-10 0 10 
+---------------------------------------------
+Array size = 5 Looking for n = 0
+---------------------------------------------
+  0   1   2   3   4
+ -2   0   1   1   2
+O(n^3)Time O(1)Space Alg  n = 5 CPU = 1.8607E-5 secs Num Tuples = 2
+O(n^2)Time O(n)Space Alg  n = 5 CPU = 5.59341E-4 secs Num Tuples = 2
+O(n^2)Time O(1)Space Alg  n = 5 CPU = 1.6893999999999998E-5 secs Num Tuples = 2
+-2 0 2 
+-2 1 1 
+---------------------------------------------
+Array size = 6 Looking for n = 0
+---------------------------------------------
+  0   1   2   3   4   5
+-25069 -9243 34312 -55692 -9243 64935
+O(n^3)Time O(1)Space Alg  n = 6 CPU = 3.1864000000000005E-5 secs Num Tuples = 2
+O(n^2)Time O(n)Space Alg  n = 6 CPU = 2.42377E-4 secs Num Tuples = 2
+O(n^2)Time O(1)Space Alg  n = 6 CPU = 1.59279E-4 secs Num Tuples = 2
+-55692 -9243 64935 
+-25069 -9243 34312 
+---------------------------------------------
+Array size = 2000 Looking for n = 0
+---------------------------------------------
+O(n^3)Time O(1)Space Alg  n = 2000 CPU = 13.456366276999999 secs Num Tuples = 528
+O(n^2)Time O(n)Space Alg  n = 2000 CPU = 0.6562599330000001 secs Num Tuples = 528
+O(n^2)Time O(1)Space Alg  n = 2000 CPU = 0.179775716 secs Num Tuples = 528
+---------------------------------------------
+Array size = 4000 Looking for n = 0
+---------------------------------------------
+O(n^3)Time O(1)Space Alg  n = 4000 CPU = 93.658624527 secs Num Tuples = 2
+O(n^2)Time O(n)Space Alg  n = 4000 CPU = 0.901039814 secs Num Tuples = 2
+O(n^2)Time O(1)Space Alg  n = 4000 CPU = 0.13117408900000002 secs Num Tuples = 2
+-1906468524 308903591 1597564933 
+-1825991740 426869298 1399122442 
+---------------------------------------------
+Array size = 8000 Looking for n = 0
+---------------------------------------------
+O(n^3)Time O(1)Space Alg  n = 8000 CPU = 606.042854122 secs Num Tuples = 11
+O(n^2)Time O(n)Space Alg  n = 8000 CPU = 3.8705910279999998 secs Num Tuples = 11
+O(n^2)Time O(1)Space Alg  n = 8000 CPU = 0.44679942699999997 secs Num Tuples = 11
+-2060009284 770501022 1289508262 
+-1965303896 510253452 1455050444 
+-1872625053 676494276 1196130777 
+-1670186372 -12384429 1682570801 
+-1618442978 -28322173 1646765151 
+-1536320024 -400165924 1936485948 
+-1347507086 -311225880 1658732966 
+-1347507086 525082941 822424145 
+-1160601278 -401009979 1561611257 
+-1138819208 -855391919 1994211127 
+-551508475 215082405 336426070 
+---------------------------------------------
+Array size = 16000 Looking for n = 0
+---------------------------------------------
+O(n^2)Time O(n)Space Alg  n = 16000 CPU = 15.614064130000001 secs Num Tuples = 121
+O(n^2)Time O(1)Space Alg  n = 16000 CPU = 1.7175206840000001 secs Num Tuples = 121
+---------------------------------------------
+Array size = 128000 Looking for n = 0
+---------------------------------------------
+O(n^2)Time O(n)Space Alg  n = 128000 CPU = 2238.546657101 secs Num Tuples = 61545
+O(n^2)Time O(1)Space Alg  n = 128000 CPU = 118.372667286 secs Num Tuples = 61545
+---------------------------------------------
+Array size = 3000 Looking for n = 0
+---------------------------------------------
+O(n^3)Time O(1)Space Alg  n = 3000 CPU = 38.071451139 secs Num Tuples = 16258
+O(n^2)Time O(n)Space Alg  n = 3000 CPU = 0.5863875550000001 secs Num Tuples = 16258
+O(n^2)Time O(1)Space Alg  n = 3000 CPU = 0.067801637 secs Num Tuples = 16258
+All simple tests passed
+All test cases passed. You will get full grade now
+Include only ThreeSum.java and the output of this program for FULL grade
+ThreeSum.java ENDS

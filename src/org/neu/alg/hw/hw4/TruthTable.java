@@ -54,9 +54,12 @@ class TruthTable {
   }
 
   private void printTruthTable() {
-    printTruthTableTimeOptimized(n, 27);
+    if (n < 5) {
+      printTruthTableSpaceOptimizedV2(n);
+    }
+//    printTruthTableTimeOptimized(n, 27);
     if (n > 27) {
-      printTruthTableSpaceOptimized(n, 28);
+//      printTruthTableSpaceOptimized(n, 28);
     }
   }
 
@@ -75,6 +78,25 @@ class TruthTable {
 
     displayTableLength();
 
+  }
+
+  private void printTruthTableSpaceOptimizedV2(int n) {
+
+    int rowCount = 1 << n;
+
+    for (long j = 0; j < rowCount; j++) {
+      printDecimalAsBinary(j);
+
+    }
+    System.out.println("");
+
+  }
+
+  private void printDecimalAsBinary(long no) {
+    for (long k = 0; k < no; k++) {
+      long mask = 1 << k;
+      System.out.print((k & mask) == 0 ? "0 " : "1 ");
+    }
   }
 
   public String getBinaryDescriptorFromDecimal(int decimalNum) {
