@@ -2,6 +2,8 @@ package org.neu.alg.hw.hw6;
 
 import org.neu.alg.hw.*;
 
+import java.util.Iterator;
+
 /**
  * File Name: Cstring.java
  * Implements C String
@@ -15,7 +17,148 @@ import org.neu.alg.hw.*;
 
 class Cstring {
   private CharArray d; //Infinite array of char
+  public int charArrLen = 0;
+  private int nextPushPos = 0;
   static IntUtil u = new IntUtil();
+
+//  private int nextPushPos = 0;
+
+  Cstring(String stringAsNumber) {
+    this.setCharArray(stringAsNumber);
+  }
+
+  Cstring(int number) {
+    this.setCharArray("" + number);
+  }
+
+  Cstring() {
+    this.setCharArray("");
+  }
+
+  Cstring(CharArray charArray, int lenStr) {
+    this.d = charArray;
+    this.setCharArrLen(lenStr);
+  }
+
+  public CharArray getCharArray() {
+    return this.d;
+  }
+
+  public void pLn(String prefix) {
+    System.out.print(prefix);
+    CustomIterator iterator = this.getIterator(false);
+
+    while (iterator.hasNext()) {
+      System.out.print(iterator.next());
+    }
+
+    System.out.print("\n");
+
+  }
+
+  public boolean isEqual(Cstring cstring) {
+
+    if (cstring == null || cstring.charArrLen != this.charArrLen) {
+      return false;
+    }
+
+    CustomIterator iteratorLeft = this.getIterator(false);
+    CustomIterator iteratorRight = cstring.getIterator(false);
+
+    while (iteratorLeft.hasNext() || iteratorRight.hasNext()) {
+
+      if (!(iteratorLeft.hasNext() && iteratorRight.hasNext() && iteratorLeft.next() == iteratorRight.next())) {
+        return false;
+      }
+
+    }
+
+    return true;
+
+  }
+
+  public Cstring clone() {
+    return this.add(new Cstring());
+  }
+
+  private void setCharArray(String stringAsNumber) {
+    this.d = new CharArray();
+
+    int i = 0;
+    int lenStr = stringAsNumber.length();
+    for (; i < lenStr; i++) {
+      this.d.set(i, stringAsNumber.charAt(i));
+    }
+
+    this.setCharArrLen(lenStr);
+
+  }
+
+  private void setCharArrLen(int lenStr) {
+    this.charArrLen = lenStr;
+    this.nextPushPos = lenStr;
+  }
+
+  /**
+   * immutable add, return a new Cstring
+   *
+   * @param cstring
+   */
+  public Cstring add(Cstring cstring) {
+
+    CustomIterator iteratorLeft = this.getIterator(false);
+    CustomIterator iteratorRight = cstring.getIterator(false);
+
+    CharArray tmpCharArray = new CharArray();
+
+    int i = 0;
+
+    while (iteratorLeft.hasNext()) {
+      tmpCharArray.set(i++, iteratorLeft.next());
+    }
+    while (iteratorRight.hasNext()) {
+      tmpCharArray.set(i++, iteratorRight.next());
+    }
+
+    return new Cstring(tmpCharArray, i);
+
+  }
+
+  /**
+   * mutable add, return the raw Cstring
+   *
+   * @param cstring
+   */
+  public Cstring append(Cstring cstring) {
+
+    CustomIterator iteratorRight = cstring.getIterator(false);
+
+    CharArray tmpCharArray = this.d;
+
+    int i = this.charArrLen;
+
+    while (iteratorRight.hasNext()) {
+      tmpCharArray.set(i++, iteratorRight.next());
+    }
+
+    this.setCharArrLen(i);
+
+    while (i >= 0) {
+      this.d.set(i - 1, tmpCharArray.get(i));
+      i--;
+    }
+
+    return this;
+  }
+
+//  public void push(char charAsNum) {
+//    this.d.set(this.nextPushPos++, charAsNum);
+//    this.charArrLen++;
+//  }
+
+  public CustomIterator getIterator(boolean rightToLeft) {
+    return new CustomIterator(this.d, this.charArrLen, rightToLeft);
+  }
 
   private static void testBench() {
 
@@ -27,6 +170,39 @@ class Cstring {
     System.out.println("Cstring.java starts");
     testBench();
     System.out.println("Cstring.java ends");
+  }
+
+}
+
+class CustomIterator {
+
+  private CharArray charArray;
+
+  private int charArrayNextPos = 0;
+  private int charArrLen;
+  private boolean rightToLeft;
+
+  public CustomIterator(CharArray charArray, int charArrLen, boolean rightToLeft) {
+    // initialize cursor
+    this.charArray = charArray;
+
+    this.charArrLen = charArrLen;
+    this.rightToLeft = rightToLeft;
+    if (rightToLeft) {
+      this.charArrayNextPos = charArrLen;
+    }
+
+  }
+
+  // Checks if the next element exists
+  public boolean hasNext() {
+    return this.rightToLeft ? this.charArrayNextPos >= 0 : this.charArrayNextPos < this.charArrLen;
+
+  }
+
+  // moves the cursor/iterator to next element
+  public char next() {
+    return charArray.get(this.rightToLeft ? this.charArrayNextPos-- : this.charArrayNextPos++);
   }
 
 }
