@@ -2,8 +2,6 @@ package org.neu.alg.hw.hw6;
 
 import org.neu.alg.hw.*;
 
-import java.util.Iterator;
-
 /**
  * File Name: Cstring.java
  * Implements C String
@@ -18,13 +16,14 @@ import java.util.Iterator;
 class Cstring {
   private CharArray d; //Infinite array of char
   public int charArrLen = 0;
-  private int nextPushPos = 0;
   static IntUtil u = new IntUtil();
-
-//  private int nextPushPos = 0;
 
   Cstring(String stringAsNumber) {
     this.setCharArray(stringAsNumber);
+  }
+
+  Cstring(char charAsNumber) {
+    this.setCharArray(Character.toString(charAsNumber));
   }
 
   Cstring(int number) {
@@ -80,6 +79,11 @@ class Cstring {
   public Cstring clone() {
     return this.add(new Cstring());
   }
+  public void reverse() {
+    for (int i = 0; i < this.charArrLen / 2; i++) {
+      this.d.swap(i, this.charArrLen - 1 - i);
+    }
+  }
 
   private void setCharArray(String stringAsNumber) {
     this.d = new CharArray();
@@ -96,7 +100,6 @@ class Cstring {
 
   private void setCharArrLen(int lenStr) {
     this.charArrLen = lenStr;
-    this.nextPushPos = lenStr;
   }
 
   /**
@@ -124,6 +127,10 @@ class Cstring {
 
   }
 
+  public Cstring add(String strToAdd) {
+    return this.add(new Cstring(strToAdd));
+  }
+
   /**
    * mutable add, return the raw Cstring
    *
@@ -135,20 +142,25 @@ class Cstring {
 
     CharArray tmpCharArray = this.d;
 
-    int i = this.charArrLen;
+    int len = this.charArrLen;
 
     while (iteratorRight.hasNext()) {
-      tmpCharArray.set(i++, iteratorRight.next());
+      tmpCharArray.set(len++, iteratorRight.next());
     }
 
-    this.setCharArrLen(i);
-
-    while (i >= 0) {
-      this.d.set(i - 1, tmpCharArray.get(i));
-      i--;
-    }
+    this.setCharArrLen(len);
 
     return this;
+  }
+
+  public Cstring append(String strToAppend) {
+
+    return this.append(new Cstring(strToAppend));
+  }
+
+  public Cstring append(int number) {
+
+    return this.append(new Cstring(number));
   }
 
 //  public void push(char charAsNum) {
@@ -179,30 +191,35 @@ class CustomIterator {
   private CharArray charArray;
 
   private int charArrayNextPos = 0;
-  private int charArrLen;
+//  private int charArrLen;
   private boolean rightToLeft;
 
   public CustomIterator(CharArray charArray, int charArrLen, boolean rightToLeft) {
     // initialize cursor
     this.charArray = charArray;
 
-    this.charArrLen = charArrLen;
+//    this.charArrLen = charArrLen;
     this.rightToLeft = rightToLeft;
     if (rightToLeft) {
-      this.charArrayNextPos = charArrLen;
+      this.charArrayNextPos = charArrLen - 1;
     }
 
   }
 
   // Checks if the next element exists
   public boolean hasNext() {
-    return this.rightToLeft ? this.charArrayNextPos >= 0 : this.charArrayNextPos < this.charArrLen;
-
+    return this.charArrayNextPos >= 0 && charArray.get(this.charArrayNextPos) != '\0';
   }
 
   // moves the cursor/iterator to next element
   public char next() {
-    return charArray.get(this.rightToLeft ? this.charArrayNextPos-- : this.charArrayNextPos++);
+    char nextChar = charArray.get(this.charArrayNextPos);
+    if (this.rightToLeft) {
+      this.charArrayNextPos--;
+    } else {
+      this.charArrayNextPos++;
+    }
+    return nextChar;
   }
 
 }

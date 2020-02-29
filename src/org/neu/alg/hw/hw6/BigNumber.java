@@ -35,6 +35,10 @@ class BigNumber {
     this.d = new Cstring(strAsNumber);
   }
 
+  BigNumber(char charAsNumber) {
+    this.d = new Cstring(charAsNumber);
+  }
+
 
   BigNumber(Cstring cstring) {
     this.d = cstring;
@@ -56,22 +60,44 @@ class BigNumber {
 
     int carrier = 0;
 
-    while (iteratorLeft.hasNext() && iteratorRight.hasNext()) {
-      int charAsIntLeft = Character.getNumericValue(iteratorLeft.next());
-      int charAsIntRight = Character.getNumericValue(iteratorRight.next());
+    while (iteratorLeft.hasNext() || iteratorRight.hasNext()) {
 
-      int sum = charAsIntLeft + charAsIntRight;
+      int charAsIntLeft = Character.getNumericValue(
+          iteratorLeft.hasNext()
+              ? iteratorLeft.next()
+              : '0'
+      );
 
-      if (sum > 10) {
+      int charAsIntRight = Character.getNumericValue(
+
+          iteratorRight.hasNext()
+              ? iteratorRight.next()
+              : '0'
+
+      );
+
+      int sum = charAsIntLeft + charAsIntRight + carrier;
+
+      if (sum >= 10) {
         sum -= 10;
-        carrier++;
+        carrier = 1;
+      } else {
+        carrier = 0;
       }
 
-      resultString.push(
-          Character.forDigit(sum + carrier--, 10)
+      resultString.append(
+          sum
       );
 
     }
+
+    if (carrier == 1) {
+      resultString.append(
+          carrier
+      );
+    }
+
+    resultString.reverse();
 
     return new BigNumber(resultString);
   }
@@ -108,7 +134,9 @@ class BigNumber {
   }
 
   private static void test1() {
-    BigNumber b = new BigNumber(10);
+    BigNumber a = new BigNumber(789);
+    a.pLn("a = ");
+
 
   }
 
