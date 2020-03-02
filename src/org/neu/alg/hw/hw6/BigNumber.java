@@ -53,8 +53,14 @@ class BigNumber {
   }
 
   public BigNumber add(BigNumber numberToAdd) {
-    CustomIterator iteratorLeft = numberToAdd.d.getIterator(true);
-    CustomIterator iteratorRight = this.d.getIterator(true);
+
+    return BigNumber.add(this, numberToAdd);
+
+  }
+
+  static BigNumber add(BigNumber left, BigNumber right) {
+    CustomIterator iteratorLeft = left.d.getIterator(true);
+    CustomIterator iteratorRight = right.d.getIterator(true);
 
     Cstring resultString = new Cstring();
 
@@ -107,7 +113,13 @@ class BigNumber {
   }
 
   public BigNumber sub(BigNumber numberToSubtract) {
-    return numberToSubtract;
+    BigNumber complement = BigNumber.getComplement(numberToSubtract);
+    if (complement.isEqual(0)){
+      return this;
+    }
+    BigNumber tmpBigNumFromAddingComplement = BigNumber.add(this, complement);
+    return BigNumber.subtractComplement(tmpBigNumFromAddingComplement, numberToSubtract.size() + 1);
+
   }
 
   // @Override
@@ -132,6 +144,126 @@ class BigNumber {
   public Cstring getD() {
     return this.d;
   }
+
+
+  private static BigNumber getComplement(BigNumber bigNumber) {
+
+    Cstring resultString = new Cstring();
+    CustomIterator iterator = bigNumber.getD().getIterator(true);
+
+    int borrower = 0;
+
+    while (iterator.hasNext()) {
+
+      int currentDigit = 10 - borrower;
+      int charAsInt = BigNumber.getCharFromIterator(iterator);
+
+      int sum = currentDigit - charAsInt;
+
+      if (sum == 10) {
+        resultString.append(0);
+      } else {
+        borrower = 1;
+        resultString.append(sum);
+      }
+
+    }
+
+    resultString.reverse();
+
+    return new BigNumber(resultString);
+
+  }
+
+
+  static BigNumber subtractComplement(BigNumber bigNumber, int complementDigitLength) {
+
+    Cstring resultString = new Cstring();
+    Cstring tmpStringWithAllPrefixZero = new Cstring();
+    CustomIterator iterator = bigNumber.getD().getIterator(true);
+
+    int borrower = 0;
+
+    // 5992 - 10000 = - (10000 - 5992)
+
+    int posOtherThenZero = complementDigitLength - 1;
+
+    boolean isNegativeNum = bigNumber.size() < complementDigitLength;
+
+    while (iterator.hasNext()) {
+
+      int diff = 0;
+
+      int charAsInt = BigNumber.getCharFromIterator(iterator);
+
+      if (isNegativeNum) {
+
+        int currentDigit = 10 - borrower;
+
+        diff = currentDigit - charAsInt;
+
+
+      } else if (posOtherThenZero > 0) {
+        // 15992 - 10000;
+        diff = charAsInt;
+//        resultString.append(charAsInt);
+        posOtherThenZero--;
+      } else if (posOtherThenZero == 0) {
+        diff = charAsInt - 1;
+      }
+
+      if (diff == 10 || diff == 0) {
+//          resultString.append(0);
+        tmpStringWithAllPrefixZero.append(0);
+      } else {
+        if (isNegativeNum) {
+          borrower = 1;
+        }
+        resultString.append(tmpStringWithAllPrefixZero);
+        resultString.append(diff);
+
+        tmpStringWithAllPrefixZero = new Cstring();
+      }
+
+    }
+
+//    if (isNegativeNum) {
+//      resultString.append("-");
+//    }
+
+    if (resultString.charArrLen == 0) {
+      resultString = new Cstring(0);
+    }
+
+    if (isNegativeNum) {
+      // remove all prefix
+      resultString.append("-");
+    }
+
+    resultString.reverse();
+
+
+    return new BigNumber(resultString);
+
+  }
+
+
+  static int getCharFromIterator(CustomIterator iterator) {
+    char iteratorNextChar = '0';
+    if (iterator.hasNext()) {
+      iteratorNextChar = iterator.next();
+
+      if (BigNumber.isSign(iteratorNextChar)) {
+        iteratorNextChar = '0';
+      }
+    }
+    return Character.getNumericValue(iteratorNextChar);
+  }
+
+  private static boolean isSign(char theChar) {
+    return theChar == '-' || theChar == '+';
+  }
+
 
   private static void test1() {
     BigNumber a = new BigNumber(789);
