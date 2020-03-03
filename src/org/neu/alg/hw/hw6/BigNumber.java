@@ -240,41 +240,50 @@ class BigNumber {
         diff = currentDigit - charAsInt;
 
 
-      } else if (posOtherThenZero > 0) {
-        // 15992 - 10000;
-        diff = charAsInt;
-//        resultString.append(charAsInt);
-        posOtherThenZero--;
-      } else if (posOtherThenZero == 0) {
-        diff = charAsInt - 1;
-      }
-
-      if (diff == 10 || diff == 0) {
-//          resultString.append(0);
-        tmpStringWithAllPrefixZero.append(0);
       } else {
-        if (isNegativeNum) {
-          borrower = 1;
+        if (posOtherThenZero > 0) {
+          // 15992 - 10000;
+          diff = charAsInt;
+//        resultString.append(charAsInt);
+        } else if (posOtherThenZero < 0) {
+          // 15992 - 10000;
+          diff = charAsInt - borrower;
+//        resultString.append(charAsInt);
+        }  else  {
+          diff = charAsInt - 1;
         }
-        resultString.append(tmpStringWithAllPrefixZero);
-        resultString.append(diff);
 
-        tmpStringWithAllPrefixZero = new Cstring();
+        if (diff < 0) {
+          diff = 10 + diff;
+          borrower = 1;
+        } else {
+          borrower = 0;
+        }
       }
 
-    }
+        if (diff == 10 || diff == 0) {
+//          resultString.append(0);
+          tmpStringWithAllPrefixZero.append(0);
+        } else {
+          if (isNegativeNum) {
+            borrower = 1;
+          }
+          resultString.append(tmpStringWithAllPrefixZero);
+          resultString.append(diff);
 
-//    if (isNegativeNum) {
-//      resultString.append("-");
-//    }
+          tmpStringWithAllPrefixZero = new Cstring();
+        }
 
-    if (resultString.charArrLen == 0) {
-      resultString = new Cstring(0);
+      posOtherThenZero--;
+
     }
 
     if (isNegativeNum) {
-      // remove all prefix
       resultString.append("-");
+    }
+
+    if (resultString.charArrLen == 0) {
+      resultString = new Cstring(0);
     }
 
     resultString.reverse();
