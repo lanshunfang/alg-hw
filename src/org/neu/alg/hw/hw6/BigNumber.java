@@ -109,12 +109,49 @@ class BigNumber {
   }
 
   public BigNumber mult(BigNumber numberToMultiply) {
-    return numberToMultiply;
+
+    if (this.isEqual(0) || numberToMultiply.isEqual(0)) {
+      return new BigNumber(0);
+    }
+
+    BigNumber accumulation = new BigNumber(0);
+
+    Cstring digitMultiplier = new Cstring();
+
+    CustomIterator iterator = numberToMultiply.getD().getIterator(true);
+
+
+    while (iterator.hasNext()) {
+      int charAsInt = BigNumber.getCharFromIterator(iterator);
+
+      BigNumber currentIterationSum = new BigNumber(0);
+
+      BigNumber scale = new BigNumber(
+          this.getD().add(digitMultiplier)
+      );
+
+
+      while (charAsInt > 0) {
+        currentIterationSum = currentIterationSum.add(
+            scale
+        );
+        charAsInt--;
+      }
+
+      accumulation = accumulation.add(currentIterationSum);
+
+      digitMultiplier = digitMultiplier.append("0");
+
+    }
+
+    return accumulation;
+
+
   }
 
   public BigNumber sub(BigNumber numberToSubtract) {
     BigNumber complement = BigNumber.getComplement(numberToSubtract);
-    if (complement.isEqual(0)){
+    if (complement.isEqual(0)) {
       return this;
     }
     BigNumber tmpBigNumFromAddingComplement = BigNumber.add(this, complement);
