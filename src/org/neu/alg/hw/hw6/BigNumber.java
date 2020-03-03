@@ -24,7 +24,14 @@ class BigNumber {
   //YOU CAN add any public or private function so that all the tests will pass
 
   static BigNumber factorial(int number) {
-    return new BigNumber(number);
+    BigNumber accumulation =  new BigNumber(1);
+
+    while (number > 1) {
+      accumulation = accumulation.mult(new BigNumber(number));
+      number--;
+    }
+
+    return accumulation;
   }
 
   BigNumber(int num) {

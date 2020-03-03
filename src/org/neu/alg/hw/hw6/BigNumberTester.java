@@ -231,7 +231,7 @@ simpletest
 
   private static void testBench() {
     System.out.println("-----------Basic----------------");
-//    testBasic();
+    testBasic();
     System.out.println("-----------Addition----------------");
     testAdd();
     System.out.println("-----------subtraction----------------");
