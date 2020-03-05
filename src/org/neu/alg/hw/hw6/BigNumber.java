@@ -24,7 +24,7 @@ class BigNumber {
   //YOU CAN add any public or private function so that all the tests will pass
 
   static BigNumber factorial(int number) {
-    BigNumber accumulation =  new BigNumber(1);
+    BigNumber accumulation = new BigNumber(1);
 
     while (number > 1) {
       accumulation = accumulation.mult(new BigNumber(number));
@@ -116,6 +116,73 @@ class BigNumber {
   }
 
   public BigNumber mult(BigNumber numberToMultiply) {
+
+    if (this.isEqual(0) || numberToMultiply.isEqual(0)) {
+      return new BigNumber(0);
+    }
+
+//    BigNumber accumulation = new BigNumber(0);
+
+//    Cstring digitMultiplier = new Cstring();
+    Cstring accumulation = new Cstring(0);
+
+    CustomIterator iteratorRight = numberToMultiply.getD().getIterator(true);
+
+
+    int leftShift = 0;
+    while (iteratorRight.hasNext()) {
+      int charAsIntRight = BigNumber.getCharFromIterator(iteratorRight);
+
+//      Cstring currentIterationMultiplyResult = new Cstring(0);
+
+      int carrier = 0;
+      int bitOrderOfLeft = 0;
+
+      CustomIterator iteratorLeft = this.getD().getIterator(true);
+
+      while (iteratorLeft.hasNext()) {
+        int accumulatedLevelForTheBit = bitOrderOfLeft + leftShift;
+        int charAsIntLeft = BigNumber.getCharFromIterator(iteratorLeft);
+        int productResultOfCurrentBit = charAsIntLeft * charAsIntRight + carrier;
+        if (leftShift > 0 && accumulation.charArrLen > accumulatedLevelForTheBit) {
+          productResultOfCurrentBit += accumulation.getInt(accumulatedLevelForTheBit);
+        }
+        if (productResultOfCurrentBit >= 10) {
+          carrier = productResultOfCurrentBit / 10;
+          productResultOfCurrentBit = productResultOfCurrentBit % 10;
+        } else {
+          carrier = 0;
+        }
+
+        accumulation.set(accumulatedLevelForTheBit, productResultOfCurrentBit);
+
+//        currentIterationMultiplyResult.append(productResultOfCurrentBit);
+        bitOrderOfLeft++;
+      }
+
+      if (carrier != 0) {
+//          currentIterationMultiplyResult.append(carrier);
+        accumulation.append(carrier);
+      }
+
+      leftShift++;
+
+//      currentIterationMultiplyResult.append(digitMultiplier);
+
+//      accumulation = accumulation.add(currentIterationSum);
+
+//      digitMultiplier = digitMultiplier.append("0");
+
+    }
+
+    accumulation.reverse();
+
+    return new BigNumber(accumulation);
+
+
+  }
+
+  public BigNumber mult_old(BigNumber numberToMultiply) {
 
     if (this.isEqual(0) || numberToMultiply.isEqual(0)) {
       return new BigNumber(0);
@@ -256,7 +323,7 @@ class BigNumber {
           // 15992 - 10000;
           diff = charAsInt - borrower;
 //        resultString.append(charAsInt);
-        }  else  {
+        } else {
           diff = charAsInt - 1;
         }
 
@@ -268,18 +335,18 @@ class BigNumber {
         }
       }
 
-        if (diff == 10 || diff == 0) {
+      if (diff == 10 || diff == 0) {
 //          resultString.append(0);
-          tmpStringWithAllPrefixZero.append(0);
-        } else {
-          if (isNegativeNum) {
-            borrower = 1;
-          }
-          resultString.append(tmpStringWithAllPrefixZero);
-          resultString.append(diff);
-
-          tmpStringWithAllPrefixZero = new Cstring();
+        tmpStringWithAllPrefixZero.append(0);
+      } else {
+        if (isNegativeNum) {
+          borrower = 1;
         }
+        resultString.append(tmpStringWithAllPrefixZero);
+        resultString.append(diff);
+
+        tmpStringWithAllPrefixZero = new Cstring();
+      }
 
       posOtherThenZero--;
 

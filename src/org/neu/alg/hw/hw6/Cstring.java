@@ -43,6 +43,24 @@ class Cstring {
     return this.d;
   }
 
+
+  public void set(int pos, char theChar) {
+    this.getCharArray().set(pos, theChar);
+  }
+  public void set(int pos, int intAsChar) {
+    if (this.charArrLen <= pos) {
+      this.charArrLen = pos + 1;
+    }
+    this.set(pos, Character.forDigit(intAsChar, 10));
+  }
+
+  public char get(int pos) {
+    return this.getCharArray().get(pos);
+  }
+  public int getInt(int pos) {
+    return Character.getNumericValue(this.get(pos));
+  }
+
   public void pLn(String prefix) {
     System.out.print(prefix);
     CustomIterator iterator = this.getIterator(false);
