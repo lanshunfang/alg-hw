@@ -79,9 +79,10 @@ class Cstring {
   public Cstring clone() {
     return this.add(new Cstring());
   }
+
   public void reverse() {
-    for (int i = 0; i < this.charArrLen / 2; i++) {
-      this.d.swap(i, this.charArrLen - 1 - i);
+    for (int i = 0, j = this.charArrLen - 1; i < j; i++, j--) {
+      this.d.swap(i, j);
     }
   }
 
@@ -173,6 +174,53 @@ class Cstring {
   }
 
   private static void testBench() {
+    Cstring.testBasic();
+    Cstring.testAdd();
+    Cstring.testEqual();
+  }
+
+  private static void testAdd() {
+    Cstring a = new Cstring("UCSC");
+    Cstring b = new Cstring("Extension");
+    Cstring c = a.add(b);
+    a.pLn("a = ");
+    b.pLn("b = ");
+    c.pLn("c = ");
+    Cstring d = c.add("USA");
+    d.pLn("d = ");
+    a.append(b);
+    a.pLn("a+b = ");
+    a.append("World");
+    a.pLn("a+b+World = ");
+  }
+
+
+  private static void testEqual() {
+    Cstring a = new Cstring("123456789012345678901234567890123456789012345678901234567890");
+    a.pLn("a = ");
+    Cstring b = new Cstring("123456789012345678901234567890123456789012345678901234567890");
+    b.pLn("b = ");
+    u.myassert(a.isEqual(b));
+    Cstring c = new Cstring("12345678901234567890123456789012345678901234567890123456789");
+    c.pLn("c = ");
+    u.myassert(a.isEqual(c) == false);
+  }
+
+  private static void testBasic() {
+    Cstring a = new Cstring('b');
+    a.pLn("a = ");
+    Cstring b = new Cstring('7');
+    b.pLn("b = ");
+    Cstring c = new Cstring("123456789012345678901234567890123456789012345678901234567890");
+    c.pLn("c = ");
+    Cstring d = c.clone();
+    d.pLn("d = ");
+    Cstring e = new Cstring("A quick brown fox junped over a lazy dog");
+    e.pLn("e = ");
+    Cstring f = new Cstring("Gateman sees name garageman sees nametag");
+    f.pLn("f = ");
+    f.reverse();
+    f.pLn("f' = ");
 
   }
 
@@ -191,7 +239,7 @@ class CustomIterator {
   private CharArray charArray;
 
   private int charArrayNextPos = 0;
-//  private int charArrLen;
+  //  private int charArrLen;
   private boolean rightToLeft;
 
   public CustomIterator(CharArray charArray, int charArrLen, boolean rightToLeft) {
