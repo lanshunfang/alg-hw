@@ -6,9 +6,9 @@ import java.util.ArrayList;
 
 
 /**
- * File Name: GraphTest.java 
+ * File Name: GraphTest.java
  * Tests Graph object
- * 
+ *
  * @author Jagadeesh Vasudevamurthy
  * @year 2018
  */
@@ -17,82 +17,88 @@ import java.util.ArrayList;
  */
 
 class GraphTest {
-	private static final String inputFileBase = "C:\\work\\java11\\graphexamples\\";
-	private static final String outputFileBase = "C:\\work\\java11\\fig\\";
-	/*----------YOU CANNOT CHANGE ANYTHING BELOW ----------------------------*/
-	private static final IntUtil u = new IntUtil();
-	public enum GraphType {
-		NONE, UNDIRECTED , DIRECTED, WEIGHTED_UNDIRECTED, WEIGHTED_DIRECTED 
-	}
-	
-	GraphTest() {
-		testBed() ;
-	}
-	
-	GraphTest.GraphType gtype(int x) {
-		switch (x) {
-		case 1: return GraphTest.GraphType.UNDIRECTED ;
-		case 2: return GraphTest.GraphType.DIRECTED ;
-		case 3: return GraphTest.GraphType.WEIGHTED_UNDIRECTED ;
-		case 4: return GraphTest.GraphType.WEIGHTED_DIRECTED ;
-		default: return GraphTest.GraphType.NONE ;
-		}
-	}
+  private static final String inputFileBase = "/Users/lanshunfang/Downloads/graphdata/";
+  private static final String outputFileBase = "/Users/lanshunfang/Downloads/graph-output/";
+  /*----------YOU CANNOT CHANGE ANYTHING BELOW ----------------------------*/
+  private static final IntUtil u = new IntUtil();
 
-	private void u1() {
-		String name = "13" ;
-		String f = inputFileBase +  name + ".txt" ;
-		GraphTest.GraphType type = GraphTest.GraphType.UNDIRECTED ;
-		Graph g = new Graph(type) ;
-		g.buildGraph(f);
-		g.writeDot(outputFileBase + name + ".dot") ;
-		g.dump(name) ;
-		u.myassert(g.getnumV() == 7);
-		u.myassert(g.getnumE() == 24);
-	}
+  public enum GraphType {
+    NONE, UNDIRECTED, DIRECTED, WEIGHTED_UNDIRECTED, WEIGHTED_DIRECTED
+  }
 
-	private void uw1() {
-		String name = "14" ;
-		String f = inputFileBase +  name + ".txt" ;
-		GraphTest.GraphType type = GraphTest.GraphType.WEIGHTED_UNDIRECTED ;
-		Graph g = new Graph(type) ;
-		g.buildGraph(f);
-		g.writeDot(outputFileBase + name + ".dot") ;
-		g.dump(name) ;
-		u.myassert(g.getnumV() == 6);
-		u.myassert(g.getnumE() == 20);
-	}
+  GraphTest() {
+    testBed();
+  }
 
-	private void d1() {
-		String name = "15" ;//15
-		String f = inputFileBase +  name + ".txt" ;
-		GraphTest.GraphType type = GraphTest.GraphType.DIRECTED ;
-		Graph g = new Graph(type) ;
-		g.buildGraph(f);
-		g.writeDot(outputFileBase + name + ".dot") ;
-		g.dump(name) ;
-		u.myassert(g.getnumV() == 6);
-		u.myassert(g.getnumE() == 6);
-	}
+  GraphTest.GraphType gtype(int x) {
+    switch (x) {
+      case 1:
+        return GraphTest.GraphType.UNDIRECTED;
+      case 2:
+        return GraphTest.GraphType.DIRECTED;
+      case 3:
+        return GraphTest.GraphType.WEIGHTED_UNDIRECTED;
+      case 4:
+        return GraphTest.GraphType.WEIGHTED_DIRECTED;
+      default:
+        return GraphTest.GraphType.NONE;
+    }
+  }
 
-	private void dw1() {
-		String name = "16" ;
-		String f = inputFileBase +  name + ".txt" ;
-		GraphTest.GraphType type = GraphTest.GraphType.WEIGHTED_DIRECTED ;
-		Graph g = new Graph(type) ;
-		g.buildGraph(f);
-		g.writeDot(outputFileBase + name + ".dot") ;
-		g.dump(name) ;
-		u.myassert(g.getnumV() == 5);
-		u.myassert(g.getnumE() == 6);
-	}
-	
-	private void testGraphRepresentation() {
+  private void u1() {
+    String name = "13";
+    String f = inputFileBase + name + ".txt";
+    GraphTest.GraphType type = GraphTest.GraphType.UNDIRECTED;
+    Graph g = new Graph(type);
+    g.buildGraph(f);
+    g.writeDot(outputFileBase + name + ".dot");
+    g.dump(name);
+    u.myassert(g.getnumV() == 7);
+    u.myassert(g.getnumE() == 24);
+  }
+
+  private void uw1() {
+    String name = "14";
+    String f = inputFileBase + name + ".txt";
+    GraphTest.GraphType type = GraphTest.GraphType.WEIGHTED_UNDIRECTED;
+    Graph g = new Graph(type);
+    g.buildGraph(f);
+    g.writeDot(outputFileBase + name + ".dot");
+    g.dump(name);
+    u.myassert(g.getnumV() == 6);
+    u.myassert(g.getnumE() == 20);
+  }
+
+  private void d1() {
+    String name = "15";//15
+    String f = inputFileBase + name + ".txt";
+    GraphTest.GraphType type = GraphTest.GraphType.DIRECTED;
+    Graph g = new Graph(type);
+    g.buildGraph(f);
+    g.writeDot(outputFileBase + name + ".dot");
+    g.dump(name);
+    u.myassert(g.getnumV() == 6);
+    u.myassert(g.getnumE() == 6);
+  }
+
+  private void dw1() {
+    String name = "16";
+    String f = inputFileBase + name + ".txt";
+    GraphTest.GraphType type = GraphTest.GraphType.WEIGHTED_DIRECTED;
+    Graph g = new Graph(type);
+    g.buildGraph(f);
+    g.writeDot(outputFileBase + name + ".dot");
+    g.dump(name);
+    u.myassert(g.getnumV() == 5);
+    u.myassert(g.getnumE() == 6);
+  }
+
+  private void testGraphRepresentation() {
 		u1() ;
-		uw1() ;
-		d1() ;
-		dw1() ;
-	}
+    uw1();
+    d1();
+    dw1();
+  }
 //
 //	private void testDFS() {
 //		{
@@ -399,7 +405,7 @@ class GraphTest {
 //			}
 //		}
 //	}
-	
+
 //	private void SnakeAndLadder(String f, int n, int[][] l, int [][] s) {
 //		GraphTest.GraphType type = GraphTest.GraphType.DIRECTED ;
 //		Graph g = new Graph(type) ;
@@ -478,9 +484,9 @@ class GraphTest {
 //			SnakeAndLadder("SnakeisNotBad",99,l,s) ;
 //		}
 //	}
-	
-	private void testBed() {
-		testGraphRepresentation() ;
+
+  private void testBed() {
+    testGraphRepresentation();
 /*
 		
 		testDFS();
@@ -499,13 +505,13 @@ class GraphTest {
 		testTSP() ;
 		testPrim() ;
 		*/
-	}
-	
-	public static void main(String[] args) {
-		String version = System.getProperty("java.version");
-		System.out.println("Java version used for this program is " + version);
+  }
+
+  public static void main(String[] args) {
+    String version = System.getProperty("java.version");
+    System.out.println("Java version used for this program is " + version);
     System.out.println("GraphTest.java starts");
-    GraphTest g = new GraphTest() ;
+    GraphTest g = new GraphTest();
     System.out.println("GraphTest.java Ends");
     System.out.println("goggle: grapviz online");
   }
