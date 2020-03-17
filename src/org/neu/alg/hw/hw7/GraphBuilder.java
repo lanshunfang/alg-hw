@@ -73,12 +73,6 @@ class GraphBuilder {
 
         }
 
-//        if (
-//            g.getType() == GraphTest.GraphType.UNDIRECTED
-//                || g.getType() == GraphTest.GraphType.WEIGHTED_UNDIRECTED
-//        ) {
-//        }
-
       }
 
     } catch (Exception e) {

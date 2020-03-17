@@ -16,13 +16,20 @@ import java.util.ArrayList;
 
 class GraphDfs{
 	//You can have any number of private variables and private functions
+	// file name.txt
 	private String t ;
 	private Graph g ;
+	// start vertex
 	String start;
 	//Output
+	// cycle[0] == false, if dag, otherwise, non-dag
 	boolean [] cycle;
+	// iteration
 	int [] work ;
+
+	// size of the dfsorder array (length)
 	int [] size ;
+	// the topological order
 	int [] dfsorder;
 
 	
@@ -36,6 +43,13 @@ class GraphDfs{
 		this.dfsorder = dfsorder ;
 
 		//WRITE YOUR CODE
+	}
+
+	/**
+	 * For a given vertex in dfsOrder, all its fanins must appear in its left siblings
+	 */
+	private void proveTopologicalSortingOrderForDAG() {
+
 	}
 
 	public static void main(String[] args) {
