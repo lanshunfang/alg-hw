@@ -42,8 +42,8 @@ class GraphBuilder {
 
       while (br.ready()) {
 
-        String line = br.readLine();
-        String[] tokens = line.split(" ");
+        String line = br.readLine().trim();
+        String[] tokens = line.split("\\s+");
 
         if (tokens.length < 2) {
           System.out.println("[INFO] The token is invalid as its parts are less than 2");
