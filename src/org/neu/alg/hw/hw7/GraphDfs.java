@@ -57,6 +57,8 @@ class GraphDfs {
     this.size = size;
     this.dfsorder = dfsorder;
 
+    this.lastDfsIndexUpdated = dfsorder.length - 1;
+
     //WRITE YOUR CODE
 
     this.numV = this.g.getnumV();
@@ -123,8 +125,8 @@ class GraphDfs {
   }
 
   private void updateDfsOrderAndSize(int vertexId) {
-    this.dfsorder[this.lastDfsIndexUpdated] = vertexId;
-    this.size[0] = ++this.lastDfsIndexUpdated;
+    this.dfsorder[this.lastDfsIndexUpdated--] = vertexId;
+    this.size[0]++;
   }
 
   private void updateDfsWorkIteration() {
