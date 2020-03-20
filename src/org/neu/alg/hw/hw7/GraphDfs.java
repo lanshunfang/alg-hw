@@ -1,6 +1,8 @@
 package org.neu.alg.hw.hw7;
 
-import java.util.ArrayList;
+import org.neu.alg.hw.IntUtil;
+
+import java.util.HashMap;
 
 /**
  * File Name: GraphDfs.java
@@ -21,6 +23,8 @@ class GraphDfs {
   private Graph g;
 
   private int numV;
+
+  public static final IntUtil u = new IntUtil();
 
   private enum ColorEnum {
     // without visited
@@ -47,7 +51,6 @@ class GraphDfs {
 
   int lastDfsIndexUpdated;
 
-
   GraphDfs(String t, Graph g, String start, boolean[] cycle, int[] work, int[] size, int[] dfsorder) {
     this.t = t;
     this.g = g;
@@ -68,6 +71,10 @@ class GraphDfs {
     int vertexId = this.getVertexIdByName(this.start);
 
     this.dfs(vertexId, -1, -1);
+
+    this.proveTopologicalSortingOrderForDAG();
+
+    this.proceedAnyUnvisitedVertex();
 
   }
 
@@ -142,8 +149,7 @@ class GraphDfs {
   }
 
   /**
-   *
-   * @param vertexId - the vertex to visit
+   * @param vertexId       - the vertex to visit
    * @param parentVertexId - the vertex comes from
    */
   private void dfs(int vertexId, int parentVertexId, int grandpaVertexId) {
@@ -181,14 +187,42 @@ class GraphDfs {
     }
 
 
-
   }
 
   /**
    * For a given vertex in dfsOrder, all its fanins must appear in its left siblings
    */
   private void proveTopologicalSortingOrderForDAG() {
+    if (!this.isDAG()) {
+      return;
+    }
 
+    HashMap<Integer, Integer> dfsOrderHashMap = new HashMap<>();
+
+    for (int vertexOrder = 0; vertexOrder < this.dfsorder.length; vertexOrder++) {
+      dfsOrderHashMap.put(this.dfsorder[vertexOrder], vertexOrder);
+    }
+
+    for (int vertexId = 0; vertexId < this.numV; vertexId++) {
+      for (int faninIndex = 0; faninIndex < this.g.numFanin(vertexId); faninIndex++) {
+        int faninVertexId = this.g.getNodeFanin(vertexId, faninIndex);
+        this.ensureFaninPrecededToVertex(faninVertexId, vertexId, dfsOrderHashMap);
+      }
+    }
+
+  }
+
+  private void ensureFaninPrecededToVertex(int faninVertexId, int vertexId, HashMap<Integer, Integer> dfsOrderHashMap) {
+    this.u.myassert(dfsOrderHashMap.get(faninVertexId) < dfsOrderHashMap.get(vertexId));
+  }
+
+  private void proceedAnyUnvisitedVertex() {
+    for (int vertexId = 0; vertexId < this.color.length; vertexId++) {
+
+      if (this.color[vertexId] == ColorEnum.Green) {
+        this.dfs(vertexId, -1, -1);
+      }
+    }
   }
 
   public static void main(String[] args) {
