@@ -2,6 +2,7 @@ package org.neu.alg.hw.hw7;
 
 import org.neu.alg.hw.IntUtil;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -75,6 +76,8 @@ class GraphDfs {
     this.proveTopologicalSortingOrderForDAG();
 
     this.proceedAnyUnvisitedVertex();
+
+    this.stat();
 
   }
 
@@ -223,6 +226,17 @@ class GraphDfs {
         this.dfs(vertexId, -1, -1);
       }
     }
+  }
+
+  private void stat() {
+    System.out.println("");
+    System.out.println(String.format("File %s", this.t));
+    System.out.println(String.format("Num Vertices  = %d", this.numV));
+    System.out.println(String.format("Num Edges     = %d", this.g.getnumE()));
+    System.out.println(String.format("Work done     = %d", this.work[0]));
+    System.out.println(String.format("Has Cycle     = %s", this.cycle[0] ? "YES": "NO"));
+    System.out.println(String.format("DFS topological order = %s", Arrays.toString(this.dfsorder)));
+    System.out.println("------");
   }
 
   public static void main(String[] args) {
