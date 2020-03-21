@@ -46,7 +46,8 @@ class GraphBuilder {
         String[] tokens = line.split("\\s+");
 
         if (tokens.length < 2) {
-          System.out.println("[INFO] The token is invalid as its parts are less than 2");
+          // the first line is the num of the vertex
+          // the second line is the num of the edges
           continue;
         }
 

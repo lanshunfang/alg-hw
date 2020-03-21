@@ -1,6 +1,9 @@
 package org.neu.alg.hw.hw7;
 
-import java.util.ArrayList;
+import org.neu.alg.hw.IntUtil;
+
+import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * File Name: GraphDfs.java
@@ -21,6 +24,8 @@ class GraphDfs {
   private Graph g;
 
   private int numV;
+
+  public static final IntUtil u = new IntUtil();
 
   private enum ColorEnum {
     // without visited
@@ -47,7 +52,6 @@ class GraphDfs {
 
   int lastDfsIndexUpdated;
 
-
   GraphDfs(String t, Graph g, String start, boolean[] cycle, int[] work, int[] size, int[] dfsorder) {
     this.t = t;
     this.g = g;
@@ -56,6 +60,8 @@ class GraphDfs {
     this.work = work;
     this.size = size;
     this.dfsorder = dfsorder;
+
+    this.lastDfsIndexUpdated = dfsorder.length - 1;
 
     //WRITE YOUR CODE
 
@@ -66,6 +72,12 @@ class GraphDfs {
     int vertexId = this.getVertexIdByName(this.start);
 
     this.dfs(vertexId, -1, -1);
+
+    this.proveTopologicalSortingOrderForDAG();
+
+    this.proceedAnyUnvisitedVertex();
+
+    this.stat();
 
   }
 
@@ -123,8 +135,8 @@ class GraphDfs {
   }
 
   private void updateDfsOrderAndSize(int vertexId) {
-    this.dfsorder[this.lastDfsIndexUpdated] = vertexId;
-    this.size[0] = ++this.lastDfsIndexUpdated;
+    this.dfsorder[this.lastDfsIndexUpdated--] = vertexId;
+    this.size[0]++;
   }
 
   private void updateDfsWorkIteration() {
@@ -140,8 +152,7 @@ class GraphDfs {
   }
 
   /**
-   *
-   * @param vertexId - the vertex to visit
+   * @param vertexId       - the vertex to visit
    * @param parentVertexId - the vertex comes from
    */
   private void dfs(int vertexId, int parentVertexId, int grandpaVertexId) {
@@ -179,14 +190,53 @@ class GraphDfs {
     }
 
 
-
   }
 
   /**
    * For a given vertex in dfsOrder, all its fanins must appear in its left siblings
    */
   private void proveTopologicalSortingOrderForDAG() {
+    if (!this.isDAG()) {
+      return;
+    }
 
+    HashMap<Integer, Integer> dfsOrderHashMap = new HashMap<>();
+
+    for (int vertexOrder = 0; vertexOrder < this.dfsorder.length; vertexOrder++) {
+      dfsOrderHashMap.put(this.dfsorder[vertexOrder], vertexOrder);
+    }
+
+    for (int vertexId = 0; vertexId < this.numV; vertexId++) {
+      for (int faninIndex = 0; faninIndex < this.g.numFanin(vertexId); faninIndex++) {
+        int faninVertexId = this.g.getNodeFanin(vertexId, faninIndex);
+        this.ensureFaninPrecededToVertex(faninVertexId, vertexId, dfsOrderHashMap);
+      }
+    }
+
+  }
+
+  private void ensureFaninPrecededToVertex(int faninVertexId, int vertexId, HashMap<Integer, Integer> dfsOrderHashMap) {
+    this.u.myassert(dfsOrderHashMap.get(faninVertexId) < dfsOrderHashMap.get(vertexId));
+  }
+
+  private void proceedAnyUnvisitedVertex() {
+    for (int vertexId = 0; vertexId < this.color.length; vertexId++) {
+
+      if (this.color[vertexId] == ColorEnum.Green) {
+        this.dfs(vertexId, -1, -1);
+      }
+    }
+  }
+
+  private void stat() {
+    System.out.println("");
+    System.out.println(String.format("File %s", this.t));
+    System.out.println(String.format("Num Vertices  = %d", this.numV));
+    System.out.println(String.format("Num Edges     = %d", this.g.getnumE()));
+    System.out.println(String.format("Work done     = %d", this.work[0]));
+    System.out.println(String.format("Has Cycle     = %s", this.cycle[0] ? "YES": "NO"));
+    System.out.println(String.format("DFS topological order = %s", Arrays.toString(this.dfsorder)));
+    System.out.println("------");
   }
 
   public static void main(String[] args) {
