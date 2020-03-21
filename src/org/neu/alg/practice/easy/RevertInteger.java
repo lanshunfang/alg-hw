@@ -4,7 +4,6 @@ class Solution {
   public int reverse(int x) {
 
     int accumulation = 0;
-    boolean isNagetive = x < 0;
 
     boolean isLeadingZero = true;
 
