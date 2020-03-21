@@ -312,9 +312,9 @@ class Graph {
     GraphDot b = new GraphDot(this, s);
   }
 //
-//	public void dfs(String t, String start, boolean[] cycle, int [] work, int [] size, int [] dfsorder) {
-//		GraphDfs b = new GraphDfs(t,this,start,cycle,work,size,dfsorder);
-//	}
+	public void dfs(String t, String start, boolean[] cycle, int [] work, int [] size, int [] dfsorder) {
+		GraphDfs b = new GraphDfs(t,this,start,cycle,work,size,dfsorder);
+	}
 //
 //	public void bfs(String t, String start, int [] work, int[] size, int [] bfsorder, int [] bfspath) {
 //		GraphBfs b = new GraphBfs(t,this,start,work,size,bfsorder,bfspath);

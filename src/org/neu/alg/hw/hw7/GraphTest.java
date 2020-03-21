@@ -99,48 +99,52 @@ class GraphTest {
     d1();
     dw1();
   }
-//
-//	private void testDFS() {
-//		{
+
+	private void testDFS() {
+		{
 //			String [] n = {"2","3","7", "8", "1", "4","9","tinyDG", "mediumDG"} ;
+			String [] n = {"3","7", "8", "1", "4","9","tinyDG", "mediumDG"} ;
 //			int [] t = {2,2,4,1,1,2,2,2,2};
+			int [] t = {2,4,1,1,2,2,2,2};
 //			String [] s = {"1","0", "0", "1", "1", "A","A","7","10"} ;
+			String [] s = {"0", "0", "1", "1", "A","A","7","10"} ;
 //			int [] c = {0, 1, 0, 1, 0, 0,1,1,1};
-//
-//			int nl = n.length ;
-//			int tl = t.length ;
-//			int sl = s.length ;
-//			int cl = c.length ;
-//
-//			u.myassert(nl == tl);
-//			u.myassert(nl == sl);
-//			u.myassert(nl == cl);
-//
-//			for (int i = 0; i < nl; ++i) {
-//				String name = n[i] ;
-//				String f = inputFileBase +  name + ".txt" ;
-//				GraphTest.GraphType type = gtype(t[i]);
-//				Graph g = new Graph(type) ;
-//				g.buildGraph(f);
-//				g.writeDot(outputFileBase + name + ".dot") ;
-//				String sc = s[i] ; //Starting city
-//				boolean[] cycle = {false} ;
-//				//dfsorder cannot be bigger than numV
-//				int [] dfsorder = new int[g.getnumV()] ;
-//				int[] work = {0} ;
-//				int[] size = {0} ;
-//				String name1 = name + ".txt" ;
-//				g.dfs(name1,sc,cycle,work,size,dfsorder) ;
-//				if (cycle[0] == false) {
-//					u.myassert(c[i] == 0) ;
-//				}
-//				if (cycle[0] == true) {
-//					u.myassert(c[i] == 1) ;
-//				}
-//			}
-//		}
-//	}
-//
+			int [] c = {1, 0, 1, 0, 0,1,1,1};
+
+			int nl = n.length ;
+			int tl = t.length ;
+			int sl = s.length ;
+			int cl = c.length ;
+
+			u.myassert(nl == tl);
+			u.myassert(nl == sl);
+			u.myassert(nl == cl);
+
+			for (int i = 0; i < nl; ++i) {
+				String name = n[i] ;
+				String f = inputFileBase +  name + ".txt" ;
+				GraphTest.GraphType type = gtype(t[i]);
+				Graph g = new Graph(type) ;
+				g.buildGraph(f);
+				g.writeDot(outputFileBase + name + ".dot") ;
+				String sc = s[i] ; //Starting city
+				boolean[] cycle = {false} ;
+				//dfsorder cannot be bigger than numV
+				int [] dfsorder = new int[g.getnumV()] ;
+				int[] work = {0} ;
+				int[] size = {0} ;
+				String name1 = name + ".txt" ;
+				g.dfs(name1,sc,cycle,work,size,dfsorder) ;
+				if (cycle[0] == false) {
+					u.myassert(c[i] == 0) ;
+				}
+				if (cycle[0] == true) {
+					u.myassert(c[i] == 1) ;
+				}
+			}
+		}
+	}
+
 //	private void testBFS() {
 //		{
 //			String [] n = {"50","1","2","3","4","5","6","7"} ;
@@ -486,11 +490,11 @@ class GraphTest {
 //	}
 
   private void testBed() {
-    testGraphRepresentation();
-/*
+//    testGraphRepresentation();
+
 		
 		testDFS();
-		
+		/*
 		testBFS() ;
 		testSnakeAndLadder();
 		
