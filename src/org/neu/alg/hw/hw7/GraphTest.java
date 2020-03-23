@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * To compile you require: IntUtil.java RandomInt.java Graph.java GraphTest.java
  */
 
-class GraphTest {
+public class GraphTest {
   private static final String inputFileBase = "/Users/lanshunfang/Downloads/graphdata/";
   private static final String outputFileBase = "/Users/lanshunfang/Downloads/graph-output/";
   /*----------YOU CANNOT CHANGE ANYTHING BELOW ----------------------------*/

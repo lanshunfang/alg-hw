@@ -19,7 +19,7 @@ import java.util.HashMap;
 /*
  * ----------------  YOU CANNOT CHANGE ANYTHING IN THIS FILE ------------------------
  */
-class Graph {
+public class Graph {
 
   /*
    * class node(vertex)
@@ -58,7 +58,7 @@ class Graph {
   public static final IntUtil u = new IntUtil();
   public final double INFINITY = Double.MAX_VALUE;
 
-  Graph(GraphTest.GraphType t) {
+  public Graph(GraphTest.GraphType t) {
     numV = 0;
     numE = 0;
     type = t;

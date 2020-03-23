@@ -20,7 +20,7 @@ import java.util.HashMap;
  * To compile you require: IntUtil.java RandomInt.java Graph.java GraphTest.javs GraphDot.java
  */
 
-class GraphDot {
+public class GraphDot {
   private Graph g;
   private String fname;
   private IntUtil u = new IntUtil();

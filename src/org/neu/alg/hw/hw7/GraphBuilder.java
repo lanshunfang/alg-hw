@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * To compile you require: IntUtil.java RandomInt.java Graph.java GraphTest.javs GraphBuilder.java
  */
 
-class GraphBuilder {
+public class GraphBuilder {
   private Graph g;
   //You can have any number of private variables and private funcions
 
@@ -27,7 +27,7 @@ class GraphBuilder {
    *          -  insertOrFind(String name, boolean mustbethere)
    * @param f - file path
    */
-  GraphBuilder(Graph g, String f) {
+  public GraphBuilder(Graph g, String f) {
     this.g = g;
     //WRITE YOUR CODE
 
