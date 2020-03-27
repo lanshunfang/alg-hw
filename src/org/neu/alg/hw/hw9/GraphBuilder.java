@@ -1,4 +1,4 @@
-package org.neu.alg.hw.hw8;
+package org.neu.alg.hw.hw9;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

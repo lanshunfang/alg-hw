@@ -1,4 +1,4 @@
-package org.neu.alg.hw.hw8;
+package org.neu.alg.hw.hw9;
 
 import java.util.ArrayList;
 
@@ -50,10 +50,15 @@ class GraphSnakeandLadderBuilder {
         GraphBfs b = new GraphBfs("SnakeAndLadder Graphdata", this.g, "1", work, size, bfsorder, bfspath, false);
 
         System.out.println("");
+        System.out.println("");
 
+        System.out.println("^^^^^^^^");
         System.out.println("Snake and ladder, the shortest path");
         b.printShortestPath(0, bfsorder.length - 1);
         System.out.println("^^^^^^^^");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
 
     }
 
