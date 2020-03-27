@@ -84,18 +84,26 @@ class GraphBfs {
     private void init(int startVertexId) {
 
         this.bfsNodeDescriptor = new int[this.bfsorder.length][];
-        this.bfsNodeDescriptor[0] = new int[]{0, 0};
 
-        for (int i = 1; i < this.bfsNodeDescriptor.length; i++) {
+        for (int i = 0; i < this.bfsNodeDescriptor.length; i++) {
             this.bfsNodeDescriptor[i] = new int[]{-1, -1};
         }
 
         this.startVertexId = startVertexId;
         this.bfsQueue.add(this.startVertexId);
         // init first node
-        this.bfsNodeDescriptor[0][0] = 0;
-        this.bfsNodeDescriptor[0][1] = this.startVertexId;
+
+        this.bfsNodeDescriptor[this.startVertexId] = new int[]{0, this.startVertexId};
+
+//        this.bfsNodeDescriptor[0][0] = 0;
+//        this.bfsNodeDescriptor[0][1] = this.startVertexId;
         this.currentIterationLevel = 1;
+
+        this.bfsorder[0] = this.startVertexId;
+        this.bfspath[0] = this.startVertexId;
+
+        this.visited[this.startVertexId] = 1;
+
     }
 
     private int getVertexIdByName(String vertexName) {
@@ -104,19 +112,11 @@ class GraphBfs {
 
     private void bfs() {
 
-//        if (this.bfsQueue.size() == 0) {
-//            return;
-//        }
         int queueHeadVertexId = this.bfsQueue.poll();
-
-        if (this.visited[queueHeadVertexId] == 2) {
-            return;
-        }
 
         this.work[0]++;
 
         this.bfsorder[this.lastBfsOrderIndexUpdated++] = queueHeadVertexId;
-
         this.bfspath[this.lastBfsPathIndexUpdated++] = this.bfsNodeDescriptor[queueHeadVertexId][1];
 
         this.forEachFanoutOfVertexId(queueHeadVertexId, (fanoutEndVertexId, fanoutVertexIndex) -> {
@@ -196,10 +196,6 @@ class GraphBfs {
 
         int level = this.bfsNodeDescriptor[vertexId][0];
         int fromVertexId = this.bfsNodeDescriptor[vertexId][1];
-
-        if (fromVertexId == -1) {
-            return;
-        }
 
         if (fromVertexId != vertexId) {
             pathHop(fromVertexId, stringBuffer);
