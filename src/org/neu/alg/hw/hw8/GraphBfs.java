@@ -3,7 +3,6 @@ package org.neu.alg.hw.hw8;
 
 import org.neu.alg.hw.IntUtil;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -77,7 +76,6 @@ class GraphBfs {
         while (!this.bfsQueue.isEmpty()) {
             this.bfs();
         }
-//        this.bfspath[0] = startVertexId;
         this.stat();
     }
 
@@ -91,12 +89,9 @@ class GraphBfs {
 
         this.startVertexId = startVertexId;
         this.bfsQueue.add(this.startVertexId);
-        // init first node
 
         this.bfsNodeDescriptor[this.startVertexId] = new int[]{0, this.startVertexId};
 
-//        this.bfsNodeDescriptor[0][0] = 0;
-//        this.bfsNodeDescriptor[0][1] = this.startVertexId;
         this.currentIterationLevel = 1;
 
         this.bfsorder[0] = this.startVertexId;
@@ -152,7 +147,6 @@ class GraphBfs {
         for (int fanoutVertexIndex = 0; fanoutVertexIndex < fanoutCount; fanoutVertexIndex++) {
             int fanoutEndVertexId = this.g.getNodeFanout(vertexId, fanoutVertexIndex);
             lambdaRun.invoke(fanoutEndVertexId, fanoutVertexIndex);
-//      String fanoutEndVertexName = this.g.getRealName(fanoutEndVertexId);
         }
     }
 
