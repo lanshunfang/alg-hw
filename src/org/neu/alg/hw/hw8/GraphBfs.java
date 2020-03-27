@@ -34,7 +34,8 @@ class GraphBfs {
     public static final IntUtil u = new IntUtil();
 
     // 0 - unvisited
-    // 1 - visited
+    // 1 - marked and pushed in stack
+    // 2 - visited
     private int[] visited;
     // [[LEVEL, FROM]]
     // - LEVEL: Current iteration level served as the distance from start vertex
@@ -73,14 +74,19 @@ class GraphBfs {
 
     private void startBfs(int startVertexId) {
         this.init(startVertexId);
-        this.bfs();
+        while (!this.bfsQueue.isEmpty()) {
+            this.bfs();
+        }
+//        this.bfspath[0] = startVertexId;
         this.stat();
     }
 
     private void init(int startVertexId) {
 
         this.bfsNodeDescriptor = new int[this.bfsorder.length][];
-        for (int i = 0; i < this.bfsNodeDescriptor.length; i++) {
+        this.bfsNodeDescriptor[0] = new int[]{0, 0};
+
+        for (int i = 1; i < this.bfsNodeDescriptor.length; i++) {
             this.bfsNodeDescriptor[i] = new int[]{-1, -1};
         }
 
@@ -89,7 +95,6 @@ class GraphBfs {
         // init first node
         this.bfsNodeDescriptor[0][0] = 0;
         this.bfsNodeDescriptor[0][1] = this.startVertexId;
-        this.lastBfsPathIndexUpdated = 1;
         this.currentIterationLevel = 1;
     }
 
@@ -98,37 +103,44 @@ class GraphBfs {
     }
 
     private void bfs() {
-        if (this.bfsQueue.size() == 0) {
+
+//        if (this.bfsQueue.size() == 0) {
+//            return;
+//        }
+        int queueHeadVertexId = this.bfsQueue.poll();
+
+        if (this.visited[queueHeadVertexId] == 2) {
             return;
         }
 
         this.work[0]++;
 
-        int queueHeadVertexId = this.bfsQueue.poll();
-
         this.bfsorder[this.lastBfsOrderIndexUpdated++] = queueHeadVertexId;
+
+        this.bfspath[this.lastBfsPathIndexUpdated++] = this.bfsNodeDescriptor[queueHeadVertexId][1];
 
         this.forEachFanoutOfVertexId(queueHeadVertexId, (fanoutEndVertexId, fanoutVertexIndex) -> {
 
-            this.bfspath[this.lastBfsPathIndexUpdated++] = queueHeadVertexId;
-
-            if (this.visited[fanoutEndVertexId] == 1) {
+            if (this.visited[fanoutEndVertexId] != 0) {
                 return;
             }
+
+            this.visited[fanoutEndVertexId] = 1;
 
             this.bfsQueue.add(fanoutEndVertexId);
             this.bfsNodeDescriptor[fanoutEndVertexId][0] = this.currentIterationLevel;
             this.bfsNodeDescriptor[fanoutEndVertexId][1] = queueHeadVertexId;
         });
 
-        this.visited[queueHeadVertexId] = 1;
+        this.visited[queueHeadVertexId] = 2;
+
         this.currentIterationLevel++;
 
     }
 
     private void checkUnconnectedGraph() {
         for (int vertexId = 0; vertexId < this.visited.length; vertexId++) {
-            if (this.visited[vertexId] == 0) {
+            if (this.visited[vertexId] != 2) {
                 this.startBfs(vertexId);
             }
         }
@@ -148,13 +160,27 @@ class GraphBfs {
         System.out.println("");
         System.out.println(String.format("File %s", this.t));
         System.out.println(String.format("Num Vertices  = %d", this.g.getnumV()));
-        System.out.println(String.format("Num Edges     = %d", this.g.getnumE()));
+        System.out.println(String.format("Num Edges     = %d", this.g.getnumE() / 2));
         System.out.println(String.format("Work done     = %d", this.work[0]));
 //        System.out.println(String.format("Has Cycle     = %s", this.cycle[0] ? "YES": "NO"));
-        System.out.println(String.format("BFS order = %s", Arrays.toString(this.bfsorder)));
-        System.out.println(String.format("BFS path = %s", Arrays.toString(this.bfspath)));
+        System.out.println(String.format("BFS order     = %s", this.getVertexNames(this.bfsorder)));
+        System.out.println(String.format("BFS path      = %s", this.getVertexNames(this.bfspath)));
         this.pathStat();
         System.out.println("------");
+    }
+
+    private String getVertexNames(int[] vertexIds) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < vertexIds.length; i++) {
+            int vertexId = vertexIds[i];
+            if (i > 0) {
+                stringBuilder.append(" ");
+            }
+            stringBuilder.append(this.g.getRealName(vertexId));
+        }
+
+        return stringBuilder.toString();
     }
 
     private void pathStat() {
@@ -171,6 +197,10 @@ class GraphBfs {
         int level = this.bfsNodeDescriptor[vertexId][0];
         int fromVertexId = this.bfsNodeDescriptor[vertexId][1];
 
+        if (fromVertexId == -1) {
+            return;
+        }
+
         if (fromVertexId != vertexId) {
             pathHop(fromVertexId, stringBuffer);
         } else if (level != 0) {
@@ -178,8 +208,10 @@ class GraphBfs {
             u.myassert(false);
         }
 
-        stringBuffer.append("->");
-        stringBuffer.append(vertexId);
+        if (vertexId != this.startVertexId) {
+            stringBuffer.append("->");
+        }
+        stringBuffer.append(this.g.getRealName(vertexId));
 
     }
 
