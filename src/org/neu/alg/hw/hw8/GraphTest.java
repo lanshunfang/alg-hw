@@ -404,93 +404,93 @@ public class GraphTest {
 //		}
 //	}
 
-//	private void SnakeAndLadder(String f, int n, int[][] l, int [][] s) {
-//		GraphTest.GraphType type = GraphTest.GraphType.DIRECTED ;
-//		Graph g = new Graph(type) ;
-//		g.buildSnakeAndLadderGraph(n,l,s);
-//		g.writeDot(outputFileBase + f + ".dot") ;
-//		g.dump(f) ;
-//		//bfsorder cannot be bigger than numV
-//		int [] bfsorder = new int[g.getnumV()] ;
-//		int [] bfspath = new int[g.getnumV()] ;
-//		int[] work = {0} ;
-//		int[] size = {0} ;
-//		String name1 = f + ".txt" ;
-//		String sc = "1" ;
-//		g.bfs(name1,sc,work,size,bfsorder,bfspath) ;
-//	}
-//
-//	private void testSnakeAndLadder() {
-//		{
-//			int[][] l = {
-//					{3,16},
-//					{21,32},
-//					{15,25}
-//			};
-//			int[][] s = {
-//					{12,2},
-//					{30,4},
-//					{35,22}
-//			};
-//			SnakeAndLadder("Board36",36,l,s) ;
-//		}
-//		{
-//			int[][] l = {
-//					{32,62},
-//					{42,68},
-//					{12,98}
-//			};
-//			int[][] s = {
-//					{95,13},
-//					{97,25},
-//					{93,37},
-//					{79,27},
-//					{75,19},
-//					{49,47},
-//					{67,17}
-//			};
-//			SnakeAndLadder("Board100case1",100,l,s) ;
-//		}
-//		{
-//			int[][] l = {
-//					{8,52},
-//					{6,80},
-//					{42,26},//To trouble you
-//					{2,72}
-//			};
-//			int[][] s = {
-//					{51,19},
-//					{39,11},
-//					{29,37},//To trouble you
-//					{3,81},////To trouble you
-//					{59,5},
-//					{79,23},
-//					{7,53},
-//					{43,33},
-//					{21,77},
-//			};
-//			SnakeAndLadder("Board100case2",100,l,s) ;
-//		}
-//		{
-//			int[][] l = {
-//					{2,82},
-//					{64,99}
-//			};
-//			int[][] s = {
-//					{84,63},
-//			};
-//			SnakeAndLadder("SnakeisNotBad",99,l,s) ;
-//		}
-//	}
+	private void SnakeAndLadder(String f, int n, int[][] l, int [][] s) {
+		GraphTest.GraphType type = GraphTest.GraphType.DIRECTED ;
+		Graph g = new Graph(type) ;
+		g.buildSnakeAndLadderGraph(n,l,s);
+		g.writeDot(outputFileBase + f + ".dot") ;
+		g.dump(f) ;
+		//bfsorder cannot be bigger than numV
+		int [] bfsorder = new int[g.getnumV()] ;
+		int [] bfspath = new int[g.getnumV()] ;
+		int[] work = {0} ;
+		int[] size = {0} ;
+		String name1 = f + ".txt" ;
+		String sc = "1" ;
+		g.bfs(name1,sc,work,size,bfsorder,bfspath) ;
+	}
+
+	private void testSnakeAndLadder() {
+		{
+			int[][] l = {
+					{3,16},
+					{21,32},
+					{15,25}
+			};
+			int[][] s = {
+					{12,2},
+					{30,4},
+					{35,22}
+			};
+			SnakeAndLadder("Board36",36,l,s) ;
+		}
+		{
+			int[][] l = {
+					{32,62},
+					{42,68},
+					{12,98}
+			};
+			int[][] s = {
+					{95,13},
+					{97,25},
+					{93,37},
+					{79,27},
+					{75,19},
+					{49,47},
+					{67,17}
+			};
+			SnakeAndLadder("Board100case1",100,l,s) ;
+		}
+		{
+			int[][] l = {
+					{8,52},
+					{6,80},
+					{42,26},//To trouble you
+					{2,72}
+			};
+			int[][] s = {
+					{51,19},
+					{39,11},
+					{29,37},//To trouble you
+					{3,81},////To trouble you
+					{59,5},
+					{79,23},
+					{7,53},
+					{43,33},
+					{21,77},
+			};
+			SnakeAndLadder("Board100case2",100,l,s) ;
+		}
+		{
+			int[][] l = {
+					{2,82},
+					{64,99}
+			};
+			int[][] s = {
+					{84,63},
+			};
+			SnakeAndLadder("SnakeisNotBad",99,l,s) ;
+		}
+	}
 
     private void testBed() {
 //    testGraphRepresentation();
 //		testDFS();
 
-        testBFS();
-      		/*
-		testSnakeAndLadder();
-		
+//        testBFS();
+        testSnakeAndLadder();
+/*
+
 		testToplogicalSort() ;
 		testDagLongestPath() ;
 	

@@ -304,10 +304,10 @@ public class Graph {
   }
 
   //
-//  public void buildSnakeAndLadderGraph(int n, int[][] l, int [][] s) {
-//  	GraphSnakeandLadderBuilder b = new GraphSnakeandLadderBuilder(this,n,l,s);
-//  }
-//
+  public void buildSnakeAndLadderGraph(int n, int[][] l, int [][] s) {
+  	GraphSnakeandLadderBuilder b = new GraphSnakeandLadderBuilder(this,n,l,s);
+  }
+
   public void writeDot(String s) {
     GraphDot b = new GraphDot(this, s);
   }
