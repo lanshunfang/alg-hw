@@ -1,4 +1,4 @@
-package org.neu.alg.hw.hw8;
+package org.neu.alg.hw.hw9;
 
 
 import org.neu.alg.hw.IntUtil;
@@ -124,6 +124,8 @@ class GraphBfs {
 
         this.forEachFanoutOfVertexId(queueHeadVertexId, (fanoutEndVertexId, fanoutVertexIndex) -> {
 
+            this.work[0]++;
+
             if (this.visited[fanoutEndVertexId] != 0) {
                 return;
             }
@@ -166,14 +168,19 @@ class GraphBfs {
     private void stat() {
         System.out.println("");
         System.out.println(String.format("File %s", this.t));
+        System.out.println(String.format("Graph Type    = %s", this.g.getGraphType()));
         System.out.println(String.format("Num Vertices  = %d", this.g.getnumV()));
-        System.out.println(String.format("Num Edges     = %d", this.g.getnumE() / 2));
+        System.out.println(String.format("Num Edges     = %d",this.getEdgeCountDisplay() ));
         System.out.println(String.format("Work done     = %d", this.work[0]));
 //        System.out.println(String.format("Has Cycle     = %s", this.cycle[0] ? "YES": "NO"));
         System.out.println(String.format("BFS order     = %s", this.getVertexNames(this.bfsorder)));
         System.out.println(String.format("BFS path      = %s", this.getVertexNames(this.bfspath)));
         this.pathStat();
         System.out.println("------");
+    }
+
+    private int getEdgeCountDisplay() {
+        return this.g.isUndirectedGraph() ? this.g.getnumE() / 2 : this.g.getnumE();
     }
 
     private String getVertexNames(int[] vertexIds) {
