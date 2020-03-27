@@ -30,6 +30,7 @@ class GraphBfs {
     private int[] bfspath;
     //You can have any number of private variables and private funcions
 
+    private boolean isPrintState;
     public static final IntUtil u = new IntUtil();
 
     // 0 - unvisited
@@ -50,6 +51,10 @@ class GraphBfs {
     int currentIterationLevel = 0;
 
     GraphBfs(String t, Graph g, String start, int[] work, int[] size, int[] bfsorder, int[] bfspath) {
+        new GraphBfs(t, g, start, work, size, bfsorder, bfspath, true);
+    }
+
+    GraphBfs(String t, Graph g, String start, int[] work, int[] size, int[] bfsorder, int[] bfspath, boolean isPrintState) {
         this.t = t;
         this.g = g;
         this.start = start;
@@ -57,6 +62,7 @@ class GraphBfs {
         this.size = size;
         this.bfsorder = bfsorder;
         this.bfspath = bfspath;
+        this.isPrintState = isPrintState;
 
         //WRITE YOUR CODE
 
@@ -76,7 +82,9 @@ class GraphBfs {
         while (!this.bfsQueue.isEmpty()) {
             this.bfs();
         }
-        this.stat();
+        if (this.isPrintState) {
+            this.stat();
+        }
     }
 
     private void init(int startVertexId) {
@@ -130,7 +138,6 @@ class GraphBfs {
         this.visited[queueHeadVertexId] = 2;
 
         this.currentIterationLevel++;
-
     }
 
     private void checkUnconnectedGraph() {
@@ -148,6 +155,12 @@ class GraphBfs {
             int fanoutEndVertexId = this.g.getNodeFanout(vertexId, fanoutVertexIndex);
             lambdaRun.invoke(fanoutEndVertexId, fanoutVertexIndex);
         }
+    }
+
+    public void printShortestPath(int fromVertexId, int toVertexId) {
+        StringBuffer resultCollector = new StringBuffer();
+        pathHop(resultCollector, toVertexId, fromVertexId);
+        System.out.println(resultCollector.toString());
     }
 
     private void stat() {
@@ -181,26 +194,29 @@ class GraphBfs {
         for (int i = 0; i < this.bfsorder.length; i++) {
             int vertexId = this.bfsorder[i];
             StringBuffer resultCollector = new StringBuffer();
-            pathHop(vertexId, resultCollector);
+            pathHop(resultCollector, vertexId, this.startVertexId);
             System.out.println(resultCollector.toString());
         }
     }
 
-    private void pathHop(int vertexId, StringBuffer stringBuffer) {
+    private void pathHop(StringBuffer stringBuffer, int vertexId, int startVertexId) {
 
         int level = this.bfsNodeDescriptor[vertexId][0];
         int fromVertexId = this.bfsNodeDescriptor[vertexId][1];
 
         if (fromVertexId != vertexId) {
-            pathHop(fromVertexId, stringBuffer);
+            if (startVertexId != vertexId) {
+                pathHop(stringBuffer, fromVertexId, startVertexId);
+            }
         } else if (level != 0) {
             System.out.println("[ERROR] self-loop detected");
             u.myassert(false);
         }
 
-        if (vertexId != this.startVertexId) {
+        if (vertexId != startVertexId) {
             stringBuffer.append("->");
         }
+
         stringBuffer.append(this.g.getRealName(vertexId));
 
     }
