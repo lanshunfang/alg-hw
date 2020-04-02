@@ -31,14 +31,16 @@ class GraphDijkstra {
     double[] cost;
 
     class Vertex {
-        double weight;
+        double weightFromStart;
         int vertexId;
+        String vertexName;
         int visitState;
         Vertex viaVertex;
 
-        public Vertex(double weight, int vertexId, int visitState, Vertex viaVertex) {
-            this.weight = weight;
+        public Vertex(double weightFromStart, int vertexId, String vertexName, int visitState, Vertex viaVertex) {
+            this.weightFromStart = weightFromStart;
             this.vertexId = vertexId;
+            this.vertexName = vertexName;
             this.visitState = visitState;
             this.viaVertex = viaVertex;
         }
@@ -59,6 +61,9 @@ class GraphDijkstra {
     private PriorityQueue<Vertex> minHeap;
     private HashMap<Integer, Vertex> vertexHashMap;
 
+    private int startVertexId;
+    private int endVertexId;
+
 
     GraphDijkstra(String t, String dotFile, Graph g, String start, String end, int[] work, double[] cost) {
         this.t = t;
@@ -74,9 +79,12 @@ class GraphDijkstra {
             return;
         }
 
-        if (this.g.isUndirectedGraph()) {
-        	return;
-		}
+        // test data 17.txt is undirected; test case failed.
+        // uncomment this block to make the test case pass
+//        if (this.g.isUndirectedGraph()) {
+//
+//        	return;
+//		}
 
         this.initDataStructure();
 
@@ -94,27 +102,39 @@ class GraphDijkstra {
     }
 
     private void initMinHeap() {
-        this.minHeap = new PriorityQueue<Vertex>(Comparator.comparingDouble(item -> item.weight));
+        this.minHeap = new PriorityQueue<Vertex>(Comparator.comparingDouble(item -> item.weightFromStart));
         this.vertexHashMap = new HashMap<>();
+    }
+
+    private int getVertexIdByName(String vertexName) {
+        return this.g.insertOrFind(vertexName, true);
     }
 
     private void initDataStructure() {
         this.initMinHeap();
+
+        this.startVertexId = this.getVertexIdByName(this.start);
+        this.endVertexId = this.getVertexIdByName(this.end);
+
         forEachRawVertex(
                 vertexId -> {
                     Vertex vertex = new Vertex(
-                            Integer.MAX_VALUE,
+                            this.startVertexId != vertexId ? Integer.MAX_VALUE : 0,
                             vertexId,
+                            this.g.getRealName(vertexId),
                             -1,
                             null
                     );
+                    vertexHashMap.put(vertexId, vertex);
+
                     this.minHeap.add(
                             vertex
                     );
-                    vertexHashMap.put(vertexId, vertex);
                 }
         );
+
         // PriorityQueue as MIN HEAP: init all vertexes with the distance from the source as weight Integer.MAX
+        // set start vertex with the distance from the source as weight 0
         // int the via vertex with null
         // init all vertexes as unvisited state -1
     }
@@ -124,16 +144,40 @@ class GraphDijkstra {
         while ((unVisitedMinWeightVertex = this.getUnVisitedMinWeightVertex()) != null) {
             forEachFanoutOfVertex(unVisitedMinWeightVertex, (edge) -> {
 
-                double weight = edge.weight;
+                this.work[0]++;
+
+                Vertex fromVertex = edge.fromVertex;
+                Vertex toVertex = edge.toVertex;
+
+                double newWeight = edge.weight + fromVertex.weightFromStart;
+
+                if ( newWeight < toVertex.weightFromStart) {
+                    toVertex.weightFromStart = newWeight;
+                    toVertex.viaVertex = fromVertex;
+
+                    this.minHeap.remove(toVertex);
+                    this.minHeap.add(toVertex);
+
+                    if (toVertex.vertexId == this.endVertexId) {
+                        this.cost[0] = toVertex.weightFromStart;
+                    }
+                }
+
 
             });
+
+            unVisitedMinWeightVertex.visitState = 1;
         }
 
 
     }
 
     private Vertex getUnVisitedMinWeightVertex() {
-        return this.minHeap.poll();
+        Vertex inVertex = this.minHeap.poll();
+        if (inVertex != null && inVertex.visitState == -1) {
+            return inVertex;
+        }
+        return null;
     }
 
     private void forEachRawVertex(IntConsumer consumer) {
