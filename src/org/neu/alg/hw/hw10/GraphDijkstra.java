@@ -1,8 +1,8 @@
 package org.neu.alg.hw.hw10;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.PriorityQueue;
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.stream.IntStream;
@@ -36,6 +36,7 @@ class GraphDijkstra {
         String vertexName;
         int visitState;
         Vertex viaVertex;
+        double viaVertexWeight;
 
         public Vertex(double weightFromStart, int vertexId, String vertexName, int visitState, Vertex viaVertex) {
             this.weightFromStart = weightFromStart;
@@ -43,6 +44,7 @@ class GraphDijkstra {
             this.vertexName = vertexName;
             this.visitState = visitState;
             this.viaVertex = viaVertex;
+            this.viaVertexWeight = 0;
         }
     }
 
@@ -58,7 +60,18 @@ class GraphDijkstra {
         }
     }
 
+    class ShortestPathHopReport {
+        Vertex vertex;
+        ArrayList<String> hopVertexNames = new ArrayList();
+        ArrayList<String> hopVertexWeight = new ArrayList();
+
+        ShortestPathHopReport(Vertex vertex) {
+            this.vertex = vertex;
+        }
+    }
+
     private PriorityQueue<Vertex> minHeap;
+    private int heapCount;
     private HashMap<Integer, Vertex> vertexHashMap;
 
     private int startVertexId;
@@ -88,7 +101,17 @@ class GraphDijkstra {
 
         this.initDataStructure();
 
+        System.out.println("");
+
         this.dijkstraSearch();
+
+        this.statShortedPathForAllVertices();
+
+        System.out.println("------");
+
+        this.stat();
+
+
     }
 
     public static void main(String[] args) {
@@ -119,24 +142,35 @@ class GraphDijkstra {
         forEachRawVertex(
                 vertexId -> {
                     Vertex vertex = new Vertex(
-                            this.startVertexId != vertexId ? Integer.MAX_VALUE : 0,
+                            this.startVertexId != vertexId ? Double.MAX_VALUE : 0.0d,
                             vertexId,
                             this.g.getRealName(vertexId),
                             -1,
                             null
                     );
+                    vertex.viaVertex = vertex;
+
                     vertexHashMap.put(vertexId, vertex);
 
                     this.minHeap.add(
                             vertex
                     );
+
                 }
         );
+
+        this.heapCount = this.minHeap.size();
 
         // PriorityQueue as MIN HEAP: init all vertexes with the distance from the source as weight Integer.MAX
         // set start vertex with the distance from the source as weight 0
         // int the via vertex with null
         // init all vertexes as unvisited state -1
+
+        System.out.println(
+                String.format("------------------- %s -------------------", this.t)
+        );
+
+        this.statInProgress();
     }
 
     private void dijkstraSearch() {
@@ -151,12 +185,15 @@ class GraphDijkstra {
 
                 double newWeight = edge.weight + fromVertex.weightFromStart;
 
-                if ( newWeight < toVertex.weightFromStart) {
-                    toVertex.weightFromStart = newWeight;
+                if (newWeight < toVertex.weightFromStart) {
                     toVertex.viaVertex = fromVertex;
+                    toVertex.viaVertexWeight = edge.weight;
+
+                    toVertex.weightFromStart = newWeight;
 
                     this.minHeap.remove(toVertex);
                     this.minHeap.add(toVertex);
+                    this.heapCount++;
 
                     if (toVertex.vertexId == this.endVertexId) {
                         this.cost[0] = toVertex.weightFromStart;
@@ -167,9 +204,154 @@ class GraphDijkstra {
             });
 
             unVisitedMinWeightVertex.visitState = 1;
+
+            System.out.println("Work on vertex: " + unVisitedMinWeightVertex.vertexName);
+            this.statInProgress();
         }
 
 
+    }
+
+    private void stat() {
+        System.out.println("");
+//        System.out.println(String.format("File %s", this.t));
+        System.out.println(String.format("Graph Type    = %s", this.g.getGraphType()));
+        System.out.println(String.format("Num Vertices  = %d", this.g.getnumV()));
+        System.out.println(String.format("Num Edges     = %d", this.g.getnumE()));
+        System.out.println(String.format("Work done     = %d", this.work[0]));
+//        System.out.println(String.format("Has Cycle     = %s", this.cycle[0] ? "YES": "NO"));
+        System.out.println(String.format("numOfNodeAddedToHeap     = %s", this.heapCount));
+        this.pathStat();
+        System.out.println("------");
+    }
+
+    private void pathStat() {
+        System.out.println(
+                String.format(
+                        "Shortest path from city %s to city %s   =  %s",
+                        this.start,
+                        this.end,
+                        this.vertexHashMap.get(this.endVertexId).weightFromStart
+                )
+        );
+    }
+
+    private void statShortedPathForAllVertices() {
+        forEachRawVertex(
+                vertexId -> {
+                    if (vertexId == this.startVertexId) {
+                        return;
+                    }
+
+                    ShortestPathHopReport shortestPathHopReport = new ShortestPathHopReport(
+                            this.vertexHashMap.get(vertexId)
+                    );
+
+                    shortestPathHopReport = this.getPathHop(shortestPathHopReport);
+
+                    System.out.println(
+                            String.format(
+                                    "The best way to go from %s to city %s is follows",
+                                    this.start,
+                                    shortestPathHopReport.vertex.vertexName
+                            )
+                    );
+                    Collections.reverse(shortestPathHopReport.hopVertexNames);
+                    Collections.reverse(shortestPathHopReport.hopVertexWeight);
+                    System.out.println(
+                            String.format(
+                                    "%s  Cost = %s = %s",
+                                    String.join(
+                                            " -> ",
+                                            shortestPathHopReport.hopVertexNames
+
+                                    ),
+                                    String.join(" + ", shortestPathHopReport.hopVertexWeight),
+                                    shortestPathHopReport.vertex.weightFromStart
+                            )
+                    );
+                }
+        );
+    }
+
+    private ShortestPathHopReport getPathHop(ShortestPathHopReport shortestPathHopReport) {
+        Vertex vertex = shortestPathHopReport.vertex;
+        HashMap<Integer, Boolean> vertexTrack = new HashMap<>();
+
+        Vertex endVertex = vertex;
+
+        while (!(vertexTrack.containsKey(vertex.vertexId))) {
+            shortestPathHopReport.hopVertexNames.add(vertex.vertexName);
+
+            if (vertex.vertexId != this.startVertexId) {
+                shortestPathHopReport.hopVertexWeight.add(
+                        String.format("%.1f", vertex.viaVertexWeight)
+                );
+            }
+
+            vertexTrack.put(vertex.vertexId, true);
+
+            vertex = vertex.viaVertex;
+
+        }
+        return shortestPathHopReport;
+    }
+
+    private void statInProgress() {
+
+        // row 1: vertex name
+        System.out.println("");
+
+        forEachRawVertex(
+                vertexId -> {
+                    this.printFormatIntoColumn(
+                            vertexHashMap.get(vertexId).vertexName
+                    );
+                }
+        );
+
+        System.out.print("\n");
+
+        // row 2: is visited
+        forEachRawVertex(
+                vertexId -> {
+                    this.printFormatIntoColumn(
+                            vertexHashMap.get(vertexId).visitState == -1 ? "F" : "T"
+                    );
+
+                }
+        );
+
+        System.out.print("\n");
+
+        // row 3: distance
+
+        forEachRawVertex(
+                vertexId -> {
+                    double weightFromStart = vertexHashMap.get(vertexId).weightFromStart;
+                    this.printFormatIntoColumn(weightFromStart == Double.MAX_VALUE ? "L" : weightFromStart);
+
+                }
+        );
+
+        System.out.print("\n");
+
+        // row 4: via vertex name
+        forEachRawVertex(
+                vertexId -> {
+                    Vertex viaVertex = vertexHashMap.get(vertexId).viaVertex;
+                    String viaVertexName = viaVertex != null ? viaVertex.vertexName : "null";
+                    this.printFormatIntoColumn(viaVertexName);
+                }
+        );
+
+        System.out.println("");
+        System.out.println("");
+
+    }
+
+    private void printFormatIntoColumn(Object... obj) {
+        System.out.print(String.format("%-7.7s  ", obj));
     }
 
     private Vertex getUnVisitedMinWeightVertex() {
