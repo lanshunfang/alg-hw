@@ -1,5 +1,7 @@
 package org.neu.alg.hw.hw10;
 
+import org.neu.alg.hw.IntUtil;
+
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.*;
@@ -22,6 +24,10 @@ import java.util.stream.IntStream;
 class GraphDijkstra {
     //You can have any number of private variables and private functions
     //DATA GIVEN
+
+    private static final String inputFileBase = "/Users/lanshunfang/Downloads/graphdata/";
+    private static final String outputFileBase = "/Users/lanshunfang/Downloads/graph-output/";
+
     private String t; //Title
     private String dotFile; //Write tree as a dot file
     private Graph g;
@@ -29,6 +35,9 @@ class GraphDijkstra {
     String end;
     int[] work;
     double[] cost;
+
+    private IntUtil u = new IntUtil();
+
 
     class Vertex {
         double weightFromStart;
@@ -62,11 +71,16 @@ class GraphDijkstra {
 
     class ShortestPathHopReport {
         Vertex vertex;
+        ArrayList<Vertex> pathVertices = new ArrayList();
         ArrayList<String> hopVertexNames = new ArrayList();
         ArrayList<String> hopVertexWeight = new ArrayList();
 
         ShortestPathHopReport(Vertex vertex) {
             this.vertex = vertex;
+        }
+
+        boolean isEdgeInThePath(Edge edge) {
+            return pathVertices.lastIndexOf(edge.toVertex) - pathVertices.lastIndexOf(edge.fromVertex) == 1;
         }
     }
 
@@ -110,6 +124,7 @@ class GraphDijkstra {
         System.out.println("------");
 
         this.stat();
+        this.generateDotFile();
 
 
     }
@@ -247,7 +262,7 @@ class GraphDijkstra {
                             this.vertexHashMap.get(vertexId)
                     );
 
-                    shortestPathHopReport = this.getPathHop(shortestPathHopReport);
+                    this.applyPathHop(shortestPathHopReport);
 
                     System.out.println(
                             String.format(
@@ -256,8 +271,7 @@ class GraphDijkstra {
                                     shortestPathHopReport.vertex.vertexName
                             )
                     );
-                    Collections.reverse(shortestPathHopReport.hopVertexNames);
-                    Collections.reverse(shortestPathHopReport.hopVertexWeight);
+
                     System.out.println(
                             String.format(
                                     "%s  Cost = %s = %s",
@@ -274,14 +288,18 @@ class GraphDijkstra {
         );
     }
 
-    private ShortestPathHopReport getPathHop(ShortestPathHopReport shortestPathHopReport) {
+    private void applyPathHop(ShortestPathHopReport shortestPathHopReport) {
+
+        if (shortestPathHopReport.hopVertexNames.size() > 0) {
+            return;
+        }
+
         Vertex vertex = shortestPathHopReport.vertex;
         HashMap<Integer, Boolean> vertexTrack = new HashMap<>();
 
-        Vertex endVertex = vertex;
-
         while (!(vertexTrack.containsKey(vertex.vertexId))) {
             shortestPathHopReport.hopVertexNames.add(vertex.vertexName);
+            shortestPathHopReport.pathVertices.add(vertex);
 
             if (vertex.vertexId != this.startVertexId) {
                 shortestPathHopReport.hopVertexWeight.add(
@@ -294,7 +312,10 @@ class GraphDijkstra {
             vertex = vertex.viaVertex;
 
         }
-        return shortestPathHopReport;
+
+        Collections.reverse(shortestPathHopReport.pathVertices);
+        Collections.reverse(shortestPathHopReport.hopVertexNames);
+        Collections.reverse(shortestPathHopReport.hopVertexWeight);
     }
 
     private void statInProgress() {
@@ -389,6 +410,96 @@ class GraphDijkstra {
 
     private Vertex getVertexById(int vertexId) {
         return this.vertexHashMap.get(vertexId);
+    }
+
+
+    private void generateDotFile() {
+
+        ShortestPathHopReport shortestPathHopReportToEndVertex = new ShortestPathHopReport(
+                this.vertexHashMap.get(this.endVertexId)
+        );
+        this.applyPathHop(shortestPathHopReportToEndVertex);
+
+        GraphTest.GraphType graphType = g.getType();
+        boolean isDirected = graphType == GraphTest.GraphType.DIRECTED || graphType == GraphTest.GraphType.WEIGHTED_DIRECTED;
+
+        String dotFileFullPath = outputFileBase + this.t + ".dijkstra.dot";
+        u.openDotFile(dotFileFullPath);
+
+        HashMap hmReduceUndirectedDuplication = new HashMap<String, Boolean>();
+
+        String directSymbol = "->";
+
+        forEachRawVertex(
+                vertexId -> {
+
+
+                    forEachFanoutOfVertex(vertexHashMap.get(vertexId), (edge) -> {
+//                        int fo = g.getNodeFanout(i, j);
+//                        String nf = g.getRealName(fo);
+
+                        String fromVertexName = edge.fromVertex.vertexName;
+                        String toVertexName = edge.toVertex.vertexName;
+
+                        String edgeExpr = fromVertexName + directSymbol + toVertexName;
+                        String edgeExprReverse = toVertexName + directSymbol + fromVertexName;
+
+                        if (!isDirected) {
+                            if (
+                                    hmReduceUndirectedDuplication.containsKey(edgeExpr)
+                                            && hmReduceUndirectedDuplication.get(edgeExpr).equals(true)
+                            ) {
+                                return;
+                            }
+
+                            hmReduceUndirectedDuplication.put(edgeExprReverse, true);
+                        }
+
+                        DecimalFormat df = new DecimalFormat("#.#");
+
+                        boolean isEdgeInThePath = shortestPathHopReportToEndVertex.isEdgeInThePath(edge);
+
+                        String weightOnPathAttr = isEdgeInThePath
+                                ? String.format(
+                                        " <U><FONT color=\"red\" POINT-SIZE=\"15\">%s</FONT></U>",
+                                edge.toVertex.weightFromStart
+                                )
+                                : "";
+
+                        String weightLabel = graphType == GraphTest.GraphType.WEIGHTED_UNDIRECTED
+                                || graphType == GraphTest.GraphType.WEIGHTED_DIRECTED
+                                ? String.format(
+                                "label=<\n<B>%s</B>%s\n>, ",
+                                df.format(edge.weight),
+                                weightOnPathAttr
+                        )
+                                : "";
+
+                        String edgeColor = isEdgeInThePath
+                                ? "red"
+                                : "black";
+
+
+                        String extraLabel = String.format(
+                                "[%s dir=\"%s\", color=\"%s\"]",
+                                weightLabel,
+                                isDirected ? "forward" : "none",
+                                edgeColor
+                        );
+
+                        u.appendDotFile(
+                                dotFileFullPath,
+                                fromVertexName + " " + directSymbol + " " + toVertexName + extraLabel + ";"
+                        );
+                    });
+                }
+        );
+//						++numedge;
+
+
+        u.closeDotFile(dotFileFullPath);
+
+        System.out.println("Generated dot file with shorted path annotation in " + dotFileFullPath);
     }
 
 
