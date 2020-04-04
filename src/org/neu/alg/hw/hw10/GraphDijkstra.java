@@ -3,7 +3,6 @@ package org.neu.alg.hw.hw10;
 import org.neu.alg.hw.IntUtil;
 
 import java.text.DecimalFormat;
-import java.text.Format;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
@@ -426,6 +425,12 @@ class GraphDijkstra {
         String dotFileFullPath = outputFileBase + this.t + ".dijkstra.dot";
         u.openDotFile(dotFileFullPath);
 
+        u.appendDotFile(
+                dotFileFullPath,
+                String.format("labelloc=\"t\"\nlabel=<<FONT POINT-SIZE=\"15\">%s</FONT>>", this.t)
+        );
+
+
         HashMap hmReduceUndirectedDuplication = new HashMap<String, Boolean>();
 
         String directSymbol = "->";
@@ -461,9 +466,9 @@ class GraphDijkstra {
 
                         String weightOnPathAttr = isEdgeInThePath
                                 ? String.format(
-                                        " <U><FONT color=\"red\" POINT-SIZE=\"15\">%s</FONT></U>",
+                                " <U><FONT color=\"red\" POINT-SIZE=\"15\">%s</FONT></U>",
                                 edge.toVertex.weightFromStart
-                                )
+                        )
                                 : "";
 
                         String weightLabel = graphType == GraphTest.GraphType.WEIGHTED_UNDIRECTED
@@ -487,19 +492,31 @@ class GraphDijkstra {
                                 edgeColor
                         );
 
+                        String fromVertexMarkup = isEdgeInThePath ? String.format("%s[color=\"%s\"]", fromVertexName, edgeColor) : "";
+                        String endVertexMarkup = isEdgeInThePath ? String.format("%s[color=\"%s\"]", toVertexName, edgeColor) : "";
+
+                        u.appendDotFile(
+                                dotFileFullPath,
+                                fromVertexMarkup
+                        );
+
+                        u.appendDotFile(
+                                dotFileFullPath,
+                                endVertexMarkup
+                        );
+
                         u.appendDotFile(
                                 dotFileFullPath,
                                 fromVertexName + " " + directSymbol + " " + toVertexName + extraLabel + ";"
                         );
+
+
                     });
                 }
         );
-//						++numedge;
-
 
         u.closeDotFile(dotFileFullPath);
 
-        System.out.println("Generated dot file with shorted path annotation in " + dotFileFullPath);
     }
 
 
